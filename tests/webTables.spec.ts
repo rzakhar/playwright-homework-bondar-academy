@@ -115,38 +115,38 @@ test('Validate specialty update', async ({ page }) => {
 })
 
 test('Validate specialty lists', async ({ page }) => {
-        await page.goto('/')
-        await expect(page.locator('.title')).toHaveText('Welcome to Petclinic')
-        await page.getByRole('link', { name: 'Specialties' }).click();
-        await page.getByRole('button', { name: 'Add' }).click();
-        await page.locator("input#name").fill('oncology');
-        await page.getByRole('button', { name: 'Save' }).click();
-        await expect(page.getByRole('row', { name: 'oncology' })).toBeVisible();
+    await page.goto('/')
+    await expect(page.locator('.title')).toHaveText('Welcome to Petclinic')
+    await page.getByRole('link', { name: 'Specialties' }).click();
+    await page.getByRole('button', { name: 'Add' }).click();
+    await page.locator("input#name").fill('oncology');
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.getByRole('row', { name: 'oncology' })).toBeVisible();
 
-        var allSpecialties = [];
-        const specialtyRows = page.getByRole('row').filter({ has: page.getByRole('textbox') });
-        for (let specialtyRow of await specialtyRows.all()) {
-            const specialtyName = await specialtyRow.getByRole('cell').getByRole('textbox').inputValue() || '';
-            allSpecialties.push(specialtyName);
-        };
+    var allSpecialties = [];
+    const specialtyRows = page.getByRole('row').filter({ has: page.getByRole('textbox') });
+    for (let specialtyRow of await specialtyRows.all()) {
+        const specialtyName = await specialtyRow.getByRole('cell').getByRole('textbox').inputValue() || '';
+        allSpecialties.push(specialtyName);
+    };
 
-        await page.getByRole('button', { name: 'Veterinarians' }).click();
-        await page.getByRole('link', { name: 'All' }).click();
-        await page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('button', { name: 'Edit Vet' }).click();
-        await page.locator('div.dropdown').click();
-        const allCheckboxes = page.getByRole('checkbox');
-        var specialtiesDropdownItems = [];
-        for (let checkBox of await allCheckboxes.all()) {
-            specialtiesDropdownItems.push(await checkBox.getAttribute('id') || '');
-        }
-        await expect(specialtiesDropdownItems).toEqual(allSpecialties);
-        await page.getByRole('checkbox', { name: 'oncology' }).check();
-        await expect(page.locator('span.selected-specialties')).toHaveText('oncology');
-        await page.locator('div.dropdown').click();
-        await page.getByRole('button', { name: 'Save Vet' }).click();
-        await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell', { name: 'oncology' })).toBeVisible();
+    await page.getByRole('button', { name: 'Veterinarians' }).click();
+    await page.getByRole('link', { name: 'All' }).click();
+    await page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('button', { name: 'Edit Vet' }).click();
+    await page.locator('div.dropdown').click();
+    const allCheckboxes = page.getByRole('checkbox');
+    var specialtiesDropdownItems = [];
+    for (let checkBox of await allCheckboxes.all()) {
+        specialtiesDropdownItems.push(await checkBox.getAttribute('id') || '');
+    }
+    await expect(specialtiesDropdownItems).toEqual(allSpecialties);
+    await page.getByRole('checkbox', { name: 'oncology' }).check();
+    await expect(page.locator('span.selected-specialties')).toHaveText('oncology');
+    await page.locator('div.dropdown').click();
+    await page.getByRole('button', { name: 'Save Vet' }).click();
+    await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell', { name: 'oncology' })).toBeVisible();
 
-        await page.getByRole('link', { name: 'Specialties' }).click();
-        await page.getByRole('row', { name: 'oncology' }).getByRole('button', { name: 'Delete' }).click();
-        await expect(page.getByRole('row', { name: 'oncology' })).not.toBeVisible();
+    await page.getByRole('link', { name: 'Specialties' }).click();
+    await page.getByRole('row', { name: 'oncology' }).getByRole('button', { name: 'Delete' }).click();
+    await expect(page.getByRole('row', { name: 'oncology' })).not.toBeVisible();
 })
