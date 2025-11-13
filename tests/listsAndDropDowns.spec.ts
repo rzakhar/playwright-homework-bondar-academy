@@ -14,16 +14,15 @@ test.describe('Checkboxes Tests', () => {
     })
 
     test('Validate selected pet types from the list', async ({ page }) => {
-        const ownerName = "George Franklin";
-        await page.getByRole('link', { name: ownerName }).click();
-        await expect(page.locator('b.ownerFullName')).toHaveText(ownerName);
+        await page.getByRole('link', { name: "George Franklin" }).click();
+        await expect(page.locator('b.ownerFullName')).toHaveText("George Franklin");
         
-        await page.locator("dl.dl-horizontal").filter({ hasText: "Leo" }).getByRole('button', { name: 'Edit Pet' }).click();
+        await page.locator("app-pet-list", { hasText: "Leo" }).getByRole('button', { name: 'Edit Pet' }).click();
         await expect(page.getByRole('heading', { name: "Pet" })).toBeVisible();
-        await expect(page.locator('input#owner_name')).toHaveValue(ownerName);
+        await expect(page.locator('input#owner_name')).toHaveValue("George Franklin");
         await expect(page.locator('input#type1')).toHaveValue("cat");
 
-        const petTypes = ['cat', 'dog', 'lizard', 'snake', 'bird', 'hamster'];
+        const petTypes = await page.getByRole('combobox', { name: 'Type' }).locator('option').allTextContents();
         for (const petType of petTypes) {
             await page.getByRole('combobox', { name: 'Type' }).selectOption(petType);
             await expect(page.locator('input#type1')).toHaveValue(petType);
@@ -31,35 +30,30 @@ test.describe('Checkboxes Tests', () => {
     });
 
     test('Validate the pet type update', async ({ page }) => {
-        const ownerName = "Eduardo Rodriquez";
-        await page.getByRole('link', { name: ownerName }).click();
+        await page.getByRole('link', { name: "Eduardo Rodriquez" }).click();
 
-        const petName = "Rosy";
-        const petType = "dog";
-        const newPetType = "bird";
+        await test.step(`Change Rosy pet type from dog to bird`, async () => {
+            await page.locator("app-pet-list", { hasText: "Rosy" }).getByRole('button', { name: 'Edit Pet' }).click();
+            await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue("Rosy");
+            await expect(page.locator('input#type1')).toHaveValue("dog");
 
-        await test.step(`Change ${petName} pet type from ${petType} to ${newPetType}`, async () => {
-            await page.locator("dl.dl-horizontal").filter({ hasText: petName }).getByRole('button', { name: 'Edit Pet' }).click();
-            await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(petName);
-            await expect(page.locator('input#type1')).toHaveValue(petType);
-
-            await page.getByRole('combobox', { name: 'Type' }).selectOption(newPetType);
-            await expect(page.locator('input#type1')).toHaveValue(newPetType);
-            await expect(page.getByRole('combobox', { name: 'Type' })).toHaveValue(newPetType);
+            await page.getByRole('combobox', { name: 'Type' }).selectOption("bird");
+            await expect(page.locator('input#type1')).toHaveValue("bird");
+            await expect(page.getByRole('combobox', { name: 'Type' })).toHaveValue("bird");
             await page.getByRole('button', { name: 'Update Pet' }).click();
-            await expect(page.locator('dl.dl-horizontal').filter({ hasText: petName }).getByText(newPetType)).toBeVisible();
+            await expect(page.locator('app-pet-list', { hasText: "Rosy" }).getByText("bird")).toBeVisible();
         });
 
-        await test.step(`Revert ${petName} pet type back from ${newPetType} to ${petType}`, async () => {
-            await page.locator("dl.dl-horizontal").filter({ hasText: petName }).getByRole('button', { name: 'Edit Pet' }).click();
-            await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(petName);
-            await expect(page.locator('input#type1')).toHaveValue(newPetType);
+        await test.step(`Revert Rosy pet type back from bird to dog`, async () => {
+            await page.locator("app-pet-list", { hasText: "Rosy" }).getByRole('button', { name: 'Edit Pet' }).click();
+            await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue("Rosy");
+            await expect(page.locator('input#type1')).toHaveValue("bird");
 
-            await page.getByRole('combobox', { name: 'Type' }).selectOption(petType);
-            await expect(page.locator('input#type1')).toHaveValue(petType);
-            await expect(page.getByRole('combobox', { name: 'Type' })).toHaveValue(petType);
+            await page.getByRole('combobox', { name: 'Type' }).selectOption("dog");
+            await expect(page.locator('input#type1')).toHaveValue("dog");
+            await expect(page.getByRole('combobox', { name: 'Type' })).toHaveValue("dog");
             await page.getByRole('button', { name: 'Update Pet' }).click();
-            await expect(page.locator('dl.dl-horizontal').filter({ hasText: petName }).getByText(petType)).toBeVisible();
+            await expect(page.locator('dl.dl-horizontal').filter({ hasText: "Rosy" }).getByText("dog")).toBeVisible();
         });
     });
 });
