@@ -44,8 +44,7 @@ test.describe('Input Fields Tests', () => {
         await page.getByRole('row', { name: "lizard" }).getByRole('button', { name: 'Edit' }).click();
         await expect(page.locator('#name')).toHaveValue("lizard");
         await page.locator('#name').clear();
-        const helpBlock = page.locator('span.help-block');
-        await expect(helpBlock).toHaveText('Name is required');
+        await expect(page.locator('span.help-block')).toHaveText('Name is required');
         await page.getByRole('button', { name: 'Update' }).click();
         await expect(page.getByRole('heading', { name: 'Edit Pet Type' })).toBeVisible();
         await page.getByRole('button', { name: 'Cancel' }).click();
