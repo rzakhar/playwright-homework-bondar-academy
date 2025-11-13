@@ -14,12 +14,9 @@ test.describe('Checkboxes Tests', () => {
     })
 
     test('Validate selected specialties', async ({ page }) => {
-        const name = "Helen Leary";
-
-        await test.step(`Verify specialties for vet ${name}`, async () => {
-            await page.getByRole('row').filter({ hasText: name }).getByRole('button', { name: 'Edit Vet' }).click();
+        await test.step(`Verify specialties for vet Helen Leary`, async () => {
+            await page.getByRole('row', { name: "Helen Leary" }).getByRole('button', { name: 'Edit Vet' }).click();
             await expect(page.locator('span.selected-specialties')).toHaveText("radiology");
-            page.getByRole('list', { name: 'Specialties' });
             await page.locator('span.selected-specialties').click();
 
             await expect(page.getByRole('checkbox', { name: 'radiology' })).toBeChecked();
@@ -37,41 +34,36 @@ test.describe('Checkboxes Tests', () => {
     });
 
     test('Select all specialties', async ({ page }) => {
-        const name = "Rafael Ortega";
-
-        await test.step(`Verify specialties for vet ${name}`, async () => {
-            await page.getByRole('row').filter({ hasText: name }).getByRole('button', { name: 'Edit Vet' }).click();
+        await test.step(`Verify specialties for vet Rafael Ortega`, async () => {
+            await page.getByRole('row').filter({ hasText: "Rafael Ortega" }).getByRole('button', { name: 'Edit Vet' }).click();
             await expect(page.locator('span.selected-specialties')).toHaveText("surgery");
         });
 
         await test.step('Select all specialties', async () => {
             await page.locator('span.selected-specialties').click();
-            await page.getByRole('checkbox', { name: 'dentistry' }).check();
-            await page.getByRole('checkbox', { name: 'radiology' }).check();
-
-            await expect(page.getByRole('checkbox', { name: 'radiology' })).toBeChecked();
-            await expect(page.getByRole('checkbox', { name: 'surgery' })).toBeChecked();
-            await expect(page.getByRole('checkbox', { name: 'dentistry' })).toBeChecked();
+            const allSpecialtiesList = ['radiology', 'surgery', 'dentistry'];
+            for (const specialty of allSpecialtiesList) {
+                await page.getByRole('checkbox', { name: specialty }).check();
+                await expect(page.getByRole('checkbox', { name: specialty })).toBeChecked();
+            }
+            await expect(page.locator('span.selected-specialties')).toHaveText("surgery, radiology, dentistry");
         });
     });
 
     test('Unselect all specialties', async ({ page }) => {
-        const name = "Linda Douglas";
-
-        await test.step(`Verify specialties for vet ${name}`, async () => {
-            await page.getByRole('row').filter({ hasText: name }).getByRole('button', { name: 'Edit Vet' }).click();
-            await expect(page.getByRole('heading', { name: 'Edit Veterinarian' })).toBeVisible(); 
+        await test.step(`Verify specialties for vet Linda Douglas`, async () => {
+            await page.getByRole('row').filter({ hasText: "Linda Douglas" }).getByRole('button', { name: 'Edit Vet' }).click();
+            await expect(page.getByRole('heading', { name: 'Edit Veterinarian' })).toBeVisible();
             await expect(page.locator('span.selected-specialties')).toHaveText("dentistry, surgery");
         });
 
         await test.step('Unselect all specialties', async () => {
             await page.locator('span.selected-specialties').click();
-            await page.getByRole('checkbox', { name: 'surgery' }).uncheck();
-            await page.getByRole('checkbox', { name: 'dentistry' }).uncheck();
-
-            await expect(page.getByRole('checkbox', { name: 'radiology' })).not.toBeChecked();
-            await expect(page.getByRole('checkbox', { name: 'surgery' })).not.toBeChecked();
-            await expect(page.getByRole('checkbox', { name: 'dentistry' })).not.toBeChecked();
+            const allSpecialtiesList = ['radiology', 'surgery', 'dentistry'];
+            for (const specialty of allSpecialtiesList) {
+                await page.getByRole('checkbox', { name: specialty }).uncheck();
+                await expect(page.getByRole('checkbox', { name: specialty })).not.toBeChecked();
+            }
             await expect(page.locator('span.selected-specialties')).toBeEmpty();
         });
     });
