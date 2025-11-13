@@ -41,10 +41,10 @@ test.describe('Checkboxes Tests', () => {
 
         await test.step('Select all specialties', async () => {
             await page.locator('span.selected-specialties').click();
-            const allSpecialtiesList = ['radiology', 'surgery', 'dentistry'];
-            for (const specialty of allSpecialtiesList) {
-                await page.getByRole('checkbox', { name: specialty }).check();
-                await expect(page.getByRole('checkbox', { name: specialty })).toBeChecked();
+            const allCheckboxes = page.getByRole('checkbox');
+            for (const checkbox of await allCheckboxes.all()) {
+                await checkbox.check();
+                await expect(checkbox).toBeChecked();
             }
             await expect(page.locator('span.selected-specialties')).toHaveText("surgery, radiology, dentistry");
         });
@@ -59,10 +59,10 @@ test.describe('Checkboxes Tests', () => {
 
         await test.step('Unselect all specialties', async () => {
             await page.locator('span.selected-specialties').click();
-            const allSpecialtiesList = ['radiology', 'surgery', 'dentistry'];
-            for (const specialty of allSpecialtiesList) {
-                await page.getByRole('checkbox', { name: specialty }).uncheck();
-                await expect(page.getByRole('checkbox', { name: specialty })).not.toBeChecked();
+            const allCheckboxes = page.getByRole('checkbox');
+            for (const checkbox of await allCheckboxes.all()) {
+                await checkbox.uncheck();
+                await expect(checkbox).not.toBeChecked();
             }
             await expect(page.locator('span.selected-specialties')).toBeEmpty();
         });
