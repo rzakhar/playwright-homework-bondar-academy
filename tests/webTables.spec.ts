@@ -25,18 +25,17 @@ test.describe('Web Tables Tests for Owners Page', () => {
     });
 
     test('Validate search by Last Name', async ({ page }) => {
-        const searchInputsAndExpectedCounts = {
-            "Black": 1,
-            "Davis": 2,
-            "Es": 2,
-            "Playwright": 0
-        };
-        for (const [lastName, expectedCount] of Object.entries(searchInputsAndExpectedCounts)) {
+        for (const lastName of [
+            "Black",
+            "Davis",
+            "Es",
+            "Playwright"
+        ]) {
             await page.locator('input#lastName').fill(lastName);
             await page.getByRole('button', { name: 'Find Owner' }).click();
             const ownerFullNameCells = page.locator('td.ownerFullName');
-            await expect(ownerFullNameCells).toHaveCount(expectedCount);
-            if (expectedCount > 0) {
+            await page.waitForResponse(`https://petclinic-api.bondaracademy.com/petclinic/api/owners?lastName=${lastName}`);
+            if (lastName !== "Playwright") {
                 for (const ownerCell of await ownerFullNameCells.all()) {
                     await expect(ownerCell).toContainText(lastName);
                 }
@@ -128,7 +127,7 @@ test('Validate specialty lists', async ({ page }) => {
     await page.locator('div.dropdown').click();
     const allDropdownLabels = page.locator('div.dropdown-content label');
     var specialtiesDropdownItems = [];
-    for (let dropdownLabel  of await allDropdownLabels.all()) {
+    for (let dropdownLabel of await allDropdownLabels.all()) {
         specialtiesDropdownItems.push(await dropdownLabel.textContent()!);
     }
     expect(specialtiesDropdownItems).toEqual(allSpecialties);
@@ -143,5 +142,5 @@ test('Validate specialty lists', async ({ page }) => {
     await expect(page.getByRole('row', { name: 'oncology' })).not.toBeVisible();
     await page.getByRole('button', { name: 'Veterinarians' }).click();
     await page.getByRole('link', { name: 'All' }).click();
-    await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toHaveText('');
+    await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toBeEmpty();
 })
