@@ -1,16 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { PageManager } from '../page-objects/pageManager';
 
 test.describe('Web Tables Tests for Owners Page', () => {
     test.beforeEach(async ({ page }) => {
-        await test.step('Open the home page', async () => {
-            await page.goto('/')
-            await expect(page.locator('.title')).toHaveText('Welcome to Petclinic')
-        });
-        await test.step('Navigate to Owners page', async () => {
-            await page.getByRole('button', { name: 'Owners' }).click();
-            await page.getByRole('link', { name: 'Search' }).click();
-            await expect(page.getByRole('heading', { name: 'Owners' })).toBeVisible();
-        });
+        const pm = new PageManager(page);
+        await pm.navigateTo().homePage();
+        await pm.navigateTo().ownersSearchPage();
     })
 
     test('Validate the pet name city of the owner', async ({ page }) => {
@@ -71,16 +66,15 @@ test.describe('Web Tables Tests for Owners Page', () => {
 });
 
 test('Validate specialty update', async ({ page }) => {
+    const pm = new PageManager(page)
     await test.step('Validate the current specialty', async () => {
-        await page.goto('/')
-        await expect(page.locator('.title')).toHaveText('Welcome to Petclinic')
-        await page.getByRole('button', { name: 'Veterinarians' }).click();
-        await page.getByRole('link', { name: 'All' }).click();
+        await pm.navigateTo().homePage();
+        await pm.navigateTo().veterinariansPage();
+        await expect(page.getByRole('row', { name: 'Rafael Ortega' }).getByRole('cell').nth(1)).toHaveText('dermatology');
         await expect(page.getByRole('row', { name: 'Rafael Ortega' }).getByRole('cell').nth(1)).toHaveText('surgery');
     });
     await test.step('Update specialty name from dermatology to surgery', async () => {
-        await page.getByRole('link', { name: 'Specialties' }).click();
-        await expect(page.getByRole('heading', { name: 'Specialties' })).toBeVisible();
+        await pm.navigateTo().specialtiesPage();
         await page.getByRole('row', { name: 'surgery' }).getByRole('button', { name: 'Edit' }).click();
         await expect(page.getByRole('heading', { name: 'Edit Specialty' })).toBeVisible();
         await expect(page.getByRole('textbox')).toHaveValue('surgery');
@@ -89,13 +83,11 @@ test('Validate specialty update', async ({ page }) => {
         await expect(page.locator('input[id="1"]')).toHaveValue('dermatology');
     });
     await test.step('Validate the updated specialty', async () => {
-        await page.getByRole('button', { name: 'Veterinarians' }).click();
-        await page.getByRole('link', { name: 'All' }).click();
+        await pm.navigateTo().veterinariansPage();
         await expect(page.getByRole('row', { name: 'Rafael Ortega' }).getByRole('cell').nth(1)).toHaveText('dermatology');
     });
     await test.step('Revert specialty name from surgery to dermatology', async () => {
-        await page.getByRole('link', { name: 'Specialties' }).click();
-        await expect(page.getByRole('heading', { name: 'Specialties' })).toBeVisible();
+        await pm.navigateTo().specialtiesPage();
         await page.getByRole('row', { name: 'dermatology' }).getByRole('button', { name: 'Edit' }).click();
         await expect(page.getByRole('heading', { name: 'Edit Specialty' })).toBeVisible();
         await expect(page.getByRole('textbox')).toHaveValue('dermatology');
@@ -106,9 +98,9 @@ test('Validate specialty update', async ({ page }) => {
 })
 
 test('Validate specialty lists', async ({ page }) => {
-    await page.goto('/')
-    await expect(page.locator('.title')).toHaveText('Welcome to Petclinic')
-    await page.getByRole('link', { name: 'Specialties' }).click();
+    const pm = new PageManager(page);
+    await pm.navigateTo().homePage();
+    await pm.navigateTo().specialtiesPage();
     await page.getByRole('button', { name: 'Add' }).click();
     await page.locator("input#name").fill('oncology');
     await page.getByRole('button', { name: 'Save' }).click();
@@ -121,9 +113,8 @@ test('Validate specialty lists', async ({ page }) => {
         allSpecialties.push(specialtyName);
     };
 
-    await page.getByRole('button', { name: 'Veterinarians' }).click();
-    await page.getByRole('link', { name: 'All' }).click();
-    await page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('button', { name: 'Edit Vet' }).click();
+    await pm.navigateTo().veterinariansPage();
+    await pm.onVeterinarsPage().selectByNameAndGoToEditByPressingEditButton("Sharon Jenkins");
     await page.locator('div.dropdown').click();
     const allDropdownLabels = page.locator('div.dropdown-content label');
     var specialtiesDropdownItems = [];
@@ -131,16 +122,15 @@ test('Validate specialty lists', async ({ page }) => {
         specialtiesDropdownItems.push(await dropdownLabel.textContent()!);
     }
     expect(specialtiesDropdownItems).toEqual(allSpecialties);
-    await page.getByRole('checkbox', { name: 'oncology' }).check();
-    await expect(page.locator('span.selected-specialties')).toHaveText('oncology');
+    await pm.onVeterinarsPage().changeSpecialtySelection('oncology', true);
+    await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(['oncology']);
     await page.locator('div.dropdown').click();
     await page.getByRole('button', { name: 'Save Vet' }).click();
     await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toHaveText('oncology');
 
-    await page.getByRole('link', { name: 'Specialties' }).click();
+    await pm.navigateTo().specialtiesPage();
     await page.getByRole('row', { name: 'oncology' }).getByRole('button', { name: 'Delete' }).click();
     await expect(page.getByRole('row', { name: 'oncology' })).not.toBeVisible();
-    await page.getByRole('button', { name: 'Veterinarians' }).click();
-    await page.getByRole('link', { name: 'All' }).click();
+    await pm.navigateTo().veterinariansPage();
     await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toBeEmpty();
 })
