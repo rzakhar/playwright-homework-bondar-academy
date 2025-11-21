@@ -23,7 +23,7 @@ test.describe('Date Selectors Tests', () => {
         const samanthaVisitsTable = page.locator('app-pet-list', { hasText: "Samantha" }).locator('app-visit-list');
         await expect(samanthaVisitsTable.getByRole('row').nth(1).getByRole('cell').first()).toHaveText(currentDateVisitsTableExpectedValue);
 
-        var fortyFiveDaysAgo = new Date()
+        let fortyFiveDaysAgo = new Date()
         fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate() - 45);
         const fortyFiveDaysAgoVisitsTableExpectedValue = await pm.onPetDetailsPage().addNewVisitAndReturnVisitsTableExpectedValue('Samantha', 'massage therapy', fortyFiveDaysAgo);
 

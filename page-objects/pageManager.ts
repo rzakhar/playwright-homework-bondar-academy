@@ -11,9 +11,9 @@ export class PageManager {
     private readonly page: Page;
     private readonly navigationPage: NavigationPage;
     private readonly ownersPage: OwnersPage;
-    private readonly ownerInformationPage: OwnerInformationPage
+    private readonly ownerInformationPage: OwnerInformationPage;
     private readonly petDetailsPage: PetDetailsPage;
-    private readonly veterinariansPage: VeterinariansPage
+    private readonly veterinariansPage: VeterinariansPage;
     private readonly petTypesPage: PetTypesPage;
     private readonly specialtiesPage: SpecialtiesPage;
 

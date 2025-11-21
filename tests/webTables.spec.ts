@@ -45,7 +45,7 @@ test.describe('Web Tables Tests for Owners Page', () => {
     test('Validate pets of the Madison city', async ({ page }) => {
         const madisonOwnerRows = page.getByRole('row', { name: 'Madison' });
         const expectedPets = [' Leo ', ' George ', ' Mulligan ', ' Freddy '];
-        var actualPets = [];
+        let actualPets = [];
         await expect(madisonOwnerRows).toHaveCount(expectedPets.length);
 
         for (let madisonOwnerRow of await madisonOwnerRows.all()) {

@@ -70,7 +70,7 @@ export class VeterinariansPage extends HelperBase {
     async getAllSpecialtiesFromDropdown(): Promise<string[]> {
         await this.page.locator('div.dropdown').click();
         const allDropdownLabels = this.page.locator('div.dropdown-content label');
-        var specialtiesDropdownItems: string[] = [];
+        let specialtiesDropdownItems: string[] = [];
         for (let dropdownLabel of await allDropdownLabels.all()) {
             const specialtyText = await dropdownLabel.textContent();
             if (specialtyText) {
