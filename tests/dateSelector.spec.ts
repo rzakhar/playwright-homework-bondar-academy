@@ -12,7 +12,7 @@ test.describe('Date Selectors Tests', () => {
         const pm = new PageManager(page);
         await pm.onOwnersPage().goToOwnerPageByClickingOnOwnerName("Harold Davis");
         await pm.onPetDetailsPage().addNewPet('Tom', new Date(2014, 4, 20), 'dog');
-        await pm.onOwnerInformationPage().deletePetByName('Tom');
+        await pm.onOwnerInformationPage().deletePetByNameByClickingDeletePetButtonAndVerify('Tom');
     });
 
     test("Select the dates of visits and validate dates order", async ({ page }) => {
@@ -26,11 +26,11 @@ test.describe('Date Selectors Tests', () => {
         var fortyFiveDaysAgo = new Date()
         fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate() - 45);
         const fortyFiveDaysAgoVisitsTableExpectedValue = await pm.onPetDetailsPage().addNewVisitAndReturnVisitsTableExpectedValue('Samantha', 'massage therapy', fortyFiveDaysAgo);
-       
+
         await expect(samanthaVisitsTable.getByRole('row').nth(1).getByRole('cell').first()).toHaveText(currentDateVisitsTableExpectedValue);
         await expect(samanthaVisitsTable.getByRole('row').nth(2).getByRole('cell').first()).toHaveText(fortyFiveDaysAgoVisitsTableExpectedValue);
 
-        await pm.onPetDetailsPage().deleteVisitByDescription('Samantha', 'dermatologists visit');
-        await pm.onPetDetailsPage().deleteVisitByDescription('Samantha', 'massage therapy');
+        await pm.onPetDetailsPage().deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable('Samantha', 'dermatologists visit');
+        await pm.onPetDetailsPage().deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable('Samantha', 'massage therapy');
     });
 });

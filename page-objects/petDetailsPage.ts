@@ -1,8 +1,13 @@
-// or operations such as adding a new pet, updating pet details, add/update visit details
 import { test, expect } from '@playwright/test';
 import { HelperBase } from './helperBase';
 
 export class PetDetailsPage extends HelperBase {
+    /**
+     * Verify pet name, owner name and pet type on Pet Details page
+     * @param petName Pet's full name
+     * @param ownerName Owner's full name
+     * @param petType Pet's type
+     */
     async verifyPetNameOwnerAndType(petName: string, ownerName: string, petType: string) {
         await test.step(`Verify pet name: ${petName}, owner name: ${ownerName}, pet type: ${petType}`, async () => {
             await expect(this.page.getByRole('textbox', { name: 'Name' })).toHaveValue(petName);
@@ -11,6 +16,11 @@ export class PetDetailsPage extends HelperBase {
         });
     }
 
+    /**
+     * Update pet type and verify the updated type on Pet Details page and Pet List
+     * @param petName Pet's full name
+     * @param newPetType New pet type to be selected
+     */
     async updatePetTypeAndVerifyOnPetList(petName: string, newPetType: string) {
         await this.page.getByRole('combobox', { name: 'Type' }).selectOption(newPetType);
         await expect(this.page.locator('input#type1')).toHaveValue(newPetType);
@@ -19,6 +29,9 @@ export class PetDetailsPage extends HelperBase {
         await expect(this.page.locator('app-pet-list', { hasText: petName }).getByText(newPetType)).toBeVisible();
     }
 
+    /**
+     * Select every pet type from the dropdown and verify selection without saving
+     */
     async selectEveryPetTypeAndVerifySelectionWithoutSaving() {
         const petTypes = await this.page.getByRole('combobox', { name: 'Type' }).locator('option').allTextContents();
         for (const petType of petTypes) {
@@ -27,6 +40,12 @@ export class PetDetailsPage extends HelperBase {
         }
     }
 
+    /**
+     * Add a new pet and verify its details on Owner Information page
+     * @param name Pet's full name
+     * @param petBirthDate Pet's birth date
+     * @param petType Pet's type
+     */
     async addNewPet(name: string, petBirthDate: Date, petType: string) {
         await this.page.getByRole('button', { name: 'Add New Pet' }).click();
         const petNameTextBox = this.page.getByRole('textbox', { name: 'Name' });
@@ -56,7 +75,14 @@ export class PetDetailsPage extends HelperBase {
         await expect(petSummaryRows.nth(2)).toHaveText(petType);
     }
 
-    async addNewVisitAndReturnVisitsTableExpectedValue(petName: string, description: string, visitDate: Date) {
+    /**
+     * Add a new visit for a pet and return the expected date value in visits table
+     * @param petName Pet's full name
+     * @param description Visit description
+     * @param visitDate Date of the visit
+     * @returns Expected date value in visits table
+     */
+    async addNewVisitAndReturnVisitsTableExpectedValue(petName: string, description: string, visitDate: Date): Promise<string> {
         await this.page.locator('app-pet-list').filter({ hasText: petName }).getByRole('button', { name: 'Add Visit' }).click();
 
         const dateInputFieldExpectedValue = visitDate.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -75,7 +101,12 @@ export class PetDetailsPage extends HelperBase {
         return dateVisitsTableExpectedValue
     }
 
-    async deleteVisitByDescription(petName: string, visitDescription: string) {
+    /**
+     * Delete a visit by its description and verify it's removed from visits table
+     * @param petName Pet's full name
+     * @param visitDescription Description of the visit to be deleted
+     */
+    async deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable(petName: string, visitDescription: string) {
         const visitsTable = this.page.locator('app-pet-list', { hasText: petName }).locator('app-visit-list');
         await visitsTable.getByRole('row', { name: visitDescription }).getByRole('button', { name: 'Delete Visit' }).click();
         await expect(visitsTable.getByRole('row', { name: visitDescription })).toBeHidden();

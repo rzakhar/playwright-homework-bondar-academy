@@ -2,7 +2,12 @@ import { test, expect } from '@playwright/test';
 import { HelperBase } from './helperBase';
 
 export class SpecialtiesPage extends HelperBase {
-    async renameSpecialty(oldSpecialtyName: string, newSpecialtyName: string) {
+    /**
+     * Rename a specialty and verify the change on the page
+     * @param oldSpecialtyName Current name of the specialty
+     * @param newSpecialtyName New name for the specialty
+     */
+    async renameSpecialtyAndVerifySpecialtiesTableUpdate(oldSpecialtyName: string, newSpecialtyName: string) {
         await test.step(`Update specialty name from ${oldSpecialtyName} to ${newSpecialtyName}`, async () => {
             await this.page.getByRole('row', { name: oldSpecialtyName }).getByRole('button', { name: 'Edit' }).click();
             await expect(this.page.getByRole('heading', { name: 'Edit Specialty' })).toBeVisible();
@@ -13,18 +18,30 @@ export class SpecialtiesPage extends HelperBase {
         });
     }
 
-    async addSpecialty(specialtyName: string) {
+    /**
+     * Add a new specialty and verify it appears in the specialties list
+     * @param specialtyName Name of the new specialty to be added
+     */
+    async addSpecialtyAndVerifySpecialtiesTableUpdate(specialtyName: string) {
         await this.page.getByRole('button', { name: 'Add' }).click();
         await this.page.locator("input#name").fill(specialtyName);
         await this.page.getByRole('button', { name: 'Save' }).click();
         await expect(this.page.getByRole('row', { name: specialtyName })).toBeVisible();
     }
 
-    async deleteSpecialty(specialtyName: string) {
+    /**
+     * Delete a specialty and verify it is removed from the specialties list
+     * @param specialtyName Name of the specialty to be deleted
+     */
+    async deleteSpecialtyAndVerifySpecialtiesTableUpdate(specialtyName: string) {
         await this.page.getByRole('row', { name: specialtyName }).getByRole('button', { name: 'Delete' }).click();
         await expect(this.page.getByRole('row', { name: specialtyName })).not.toBeVisible();
     }
-    
+
+    /**
+     * Get all specialties from the specialties table
+     * @returns Array of specialty names
+     */
     async getAllSpecialties(): Promise<string[]> {
         var allSpecialties = [];
         const specialtyRows = this.page.getByRole('row').filter({ has: this.page.getByRole('textbox') });
