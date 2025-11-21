@@ -64,13 +64,13 @@ test('Validate specialty update', async ({ page }) => {
         await expect(page.getByRole('row', { name: 'Rafael Ortega' }).getByRole('cell').nth(1)).toHaveText('surgery');
     });
     await pm.navigateTo().specialtiesPage();
-    await pm.onSpecialtiesPage().renameSpecialtyAndVerifySpecialtiesTableUpdate('dermatology', 'surgery');
+    await pm.onSpecialtiesPage().renameSpecialtyAndVerifySpecialtiesTableUpdate('surgery', 'dermatology');
     await test.step('Validate the updated specialty', async () => {
         await pm.navigateTo().veterinariansPage();
         await expect(page.getByRole('row', { name: 'Rafael Ortega' }).getByRole('cell').nth(1)).toHaveText('dermatology');
     });
     await pm.navigateTo().specialtiesPage();
-    await pm.onSpecialtiesPage().renameSpecialtyAndVerifySpecialtiesTableUpdate('surgery', 'dermatology');
+    await pm.onSpecialtiesPage().renameSpecialtyAndVerifySpecialtiesTableUpdate('dermatology', 'surgery');
 })
 
 test('Validate specialty lists', async ({ page }) => {

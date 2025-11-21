@@ -68,13 +68,15 @@ export class VeterinarsPage extends HelperBase {
      * @returns Array of specialty names in the dropdown
      */
     async getAllSpecialtiesFromDropdown(): Promise<string[]> {
-        await this.page.locator('span.selected-specialties').click();
-        var specialties: string[] = [];
-        const allCheckboxes = this.page.getByRole('checkbox');
-        for (const checkbox of await allCheckboxes.all()) {
-            const specialtyName = await checkbox.getAttribute('name')!;
-            specialties.push(specialtyName!);
+        await this.page.locator('div.dropdown').click();
+        const allDropdownLabels = this.page.locator('div.dropdown-content label');
+        var specialtiesDropdownItems: string[] = [];
+        for (let dropdownLabel of await allDropdownLabels.all()) {
+            const specialtyText = await dropdownLabel.textContent();
+            if (specialtyText) {
+                specialtiesDropdownItems.push(specialtyText);
+            }
         }
-        return specialties;
+        return specialtiesDropdownItems;
     }
 }
