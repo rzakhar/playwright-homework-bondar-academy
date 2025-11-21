@@ -20,23 +20,14 @@ test.describe('Web Tables Tests for Owners Page', () => {
     });
 
     test('Validate search by Last Name', async ({ page }) => {
+        const pm = new PageManager(page);
         for (const lastName of [
             "Black",
             "Davis",
             "Es",
             "Playwright"
         ]) {
-            await page.locator('input#lastName').fill(lastName);
-            await page.getByRole('button', { name: 'Find Owner' }).click();
-            const ownerFullNameCells = page.locator('td.ownerFullName');
-            await page.waitForResponse(`https://petclinic-api.bondaracademy.com/petclinic/api/owners?lastName=${lastName}`);
-            if (lastName !== "Playwright") {
-                for (const ownerCell of await ownerFullNameCells.all()) {
-                    await expect(ownerCell).toContainText(lastName);
-                }
-            } else {
-                await expect(page.locator('div').getByText(`No owners with LastName starting with "${lastName}"`)).toBeVisible();
-            }
+            await pm.onOwnersPage().searchOwnerByLastName(lastName, lastName !== "Playwright");
         }
     });
 
@@ -70,58 +61,32 @@ test('Validate specialty update', async ({ page }) => {
     await test.step('Validate the current specialty', async () => {
         await pm.navigateTo().homePage();
         await pm.navigateTo().veterinariansPage();
-        await expect(page.getByRole('row', { name: 'Rafael Ortega' }).getByRole('cell').nth(1)).toHaveText('dermatology');
         await expect(page.getByRole('row', { name: 'Rafael Ortega' }).getByRole('cell').nth(1)).toHaveText('surgery');
     });
-    await test.step('Update specialty name from dermatology to surgery', async () => {
-        await pm.navigateTo().specialtiesPage();
-        await page.getByRole('row', { name: 'surgery' }).getByRole('button', { name: 'Edit' }).click();
-        await expect(page.getByRole('heading', { name: 'Edit Specialty' })).toBeVisible();
-        await expect(page.getByRole('textbox')).toHaveValue('surgery');
-        await page.getByRole('textbox').fill('dermatology');
-        await page.getByRole('button', { name: 'Update' }).click();
-        await expect(page.locator('input[id="1"]')).toHaveValue('dermatology');
-    });
+    await pm.navigateTo().specialtiesPage();
+    await pm.onSpecialtiesPage().renameSpecialty('dermatology', 'surgery');
     await test.step('Validate the updated specialty', async () => {
         await pm.navigateTo().veterinariansPage();
         await expect(page.getByRole('row', { name: 'Rafael Ortega' }).getByRole('cell').nth(1)).toHaveText('dermatology');
     });
-    await test.step('Revert specialty name from surgery to dermatology', async () => {
-        await pm.navigateTo().specialtiesPage();
-        await page.getByRole('row', { name: 'dermatology' }).getByRole('button', { name: 'Edit' }).click();
-        await expect(page.getByRole('heading', { name: 'Edit Specialty' })).toBeVisible();
-        await expect(page.getByRole('textbox')).toHaveValue('dermatology');
-        await page.getByRole('textbox').fill('surgery');
-        await page.getByRole('button', { name: 'Update' }).click();
-        await expect(page.locator('input[id="1"]')).toHaveValue('surgery');
-    });
+    await pm.navigateTo().specialtiesPage();
+    await pm.onSpecialtiesPage().renameSpecialty('surgery', 'dermatology');
 })
 
 test('Validate specialty lists', async ({ page }) => {
     const pm = new PageManager(page);
     await pm.navigateTo().homePage();
     await pm.navigateTo().specialtiesPage();
-    await page.getByRole('button', { name: 'Add' }).click();
-    await page.locator("input#name").fill('oncology');
-    await page.getByRole('button', { name: 'Save' }).click();
-    await expect(page.getByRole('row', { name: 'oncology' })).toBeVisible();
+    await pm.onSpecialtiesPage().addSpecialty('oncology');
 
-    var allSpecialties = [];
-    const specialtyRows = page.getByRole('row').filter({ has: page.getByRole('textbox') });
-    for (let specialtyRow of await specialtyRows.all()) {
-        const specialtyName = await specialtyRow.getByRole('cell').getByRole('textbox').inputValue()!;
-        allSpecialties.push(specialtyName);
-    };
+    const allSpecialties = await pm.onSpecialtiesPage().getAllSpecialties();
 
     await pm.navigateTo().veterinariansPage();
     await pm.onVeterinarsPage().selectByNameAndGoToEditByPressingEditButton("Sharon Jenkins");
-    await page.locator('div.dropdown').click();
-    const allDropdownLabels = page.locator('div.dropdown-content label');
-    var specialtiesDropdownItems = [];
-    for (let dropdownLabel of await allDropdownLabels.all()) {
-        specialtiesDropdownItems.push(await dropdownLabel.textContent()!);
-    }
+
+    const specialtiesDropdownItems = await pm.onVeterinarsPage().getAllSpecialtiesFromDropdown();
     expect(specialtiesDropdownItems).toEqual(allSpecialties);
+    
     await pm.onVeterinarsPage().changeSpecialtySelection('oncology', true);
     await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(['oncology']);
     await page.locator('div.dropdown').click();
@@ -129,8 +94,7 @@ test('Validate specialty lists', async ({ page }) => {
     await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toHaveText('oncology');
 
     await pm.navigateTo().specialtiesPage();
-    await page.getByRole('row', { name: 'oncology' }).getByRole('button', { name: 'Delete' }).click();
-    await expect(page.getByRole('row', { name: 'oncology' })).not.toBeVisible();
+    await pm.onSpecialtiesPage().deleteSpecialty('oncology');
     await pm.navigateTo().veterinariansPage();
     await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toBeEmpty();
 })
