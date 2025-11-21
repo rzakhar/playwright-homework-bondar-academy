@@ -1,0 +1,42 @@
+[
+    {
+        "id": 4329,
+        "name": "radiology"
+    },
+    {
+        "id": 4330,
+        "name": "surgery"
+    },
+    {
+        "id": 4331,
+        "name": "dentistry"
+    },
+    {
+        "id": 4332,
+        "name": "dermatology"
+    },
+    {
+        "id": 4333,
+        "name": "cardiology"
+    },
+    {
+        "id": 4334,
+        "name": "neurology"
+    },
+    {
+        "id": 4335,
+        "name": "oncology"
+    },
+    {
+        "id": 4336,
+        "name": "ophthalmology"
+    },
+    {
+        "id": 4337,
+        "name": "orthopedics"
+    },
+    {
+        "id": 4338,
+        "name": "emergency care"
+    }
+]

@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
 import owners from '../test-data/owners.json';
+import tenSpecialties from '../test-data/tenSpecialties.json';
 
 test('mocking API request', async ({ page }) => {
     await page.route('*/**/api/owners', async route => {
@@ -49,4 +50,21 @@ test('mocking API request', async ({ page }) => {
         const expectedVisitCountsForFirstPet = owners[0].pets[0].visits.length + 1; // +1 for the header row
         await expect(petListItems.first().getByRole('table').last().getByRole('row')).toHaveCount(expectedVisitCountsForFirstPet);
     });
+});
+
+test('intercept api response', async ({ page }) => {
+    await page.route('*/**/api/vets', async route => {
+        const response = await route.fetch();
+        const responseBody = await response.json();
+        responseBody[responseBody.length - 1].specialties = tenSpecialties;
+        await route.fulfill({
+            body: JSON.stringify(responseBody),
+        });
+    });
+
+    const pm = new PageManager(page);
+    await pm.navigateTo().homePage();
+    await pm.navigateTo().veterinariansPage();
+    const sharonVetRow = page.getByRole('row', { name: 'Sharon Jenkins' });
+    await expect(sharonVetRow.getByRole('cell').nth(1)).toHaveText(' ' + tenSpecialties.map(s => s.name).join('  ') + ' ');
 });
