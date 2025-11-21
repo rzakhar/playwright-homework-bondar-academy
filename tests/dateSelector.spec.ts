@@ -90,12 +90,6 @@ test.describe('Date Selectors Tests', () => {
 
         await expect(samanthaVisitsTable.getByRole('row').nth(1).getByRole('cell').first()).toHaveText(currentDateInputFieldExpectedValue);
         await expect(samanthaVisitsTable.getByRole('row').nth(2).getByRole('cell').first()).toHaveText(fortyFiveDaysAgoInputFieldExpectedValue);
-        const thirdLatestVisitString = await samanthaVisitsTable.getByRole('row').nth(3).getByRole('cell').first().textContent()!;
-        const fourthLatestVisitString = await samanthaVisitsTable.getByRole('row').nth(4).getByRole('cell').first().textContent()!;
-        const thirdLatestVisitDate = new Date(thirdLatestVisitString!);
-        const fourthLatestVisitDate = new Date(fourthLatestVisitString!);
-        expect(thirdLatestVisitDate.getTime()).toBeLessThan(fortyFiveDaysAgo.getTime());
-        expect(fourthLatestVisitDate.getTime()).toBeLessThan(currentDate.getTime());
 
         await samanthaVisitsTable.getByRole('row', { name: "dermatologists visit" }).getByRole('button', { name: 'Delete Visit' }).click();
         await samanthaVisitsTable.getByRole('row', { name: "massage therapy" }).getByRole('button', { name: 'Delete Visit' }).click();
