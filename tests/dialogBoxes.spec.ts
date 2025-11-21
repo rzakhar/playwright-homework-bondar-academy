@@ -7,4 +7,4 @@ test('Add and delete pet type', async ({ page }) => {
     await pm.navigateTo().petTypesPage();
     await pm.onPetTypesPage().addNewPetTypeAndVerifyNewRowInTheTypesTable('pig');
     await pm.onPetTypesPage().deletePetTypeAndVerifyDeletionFromTheTypesTable('pig');
-})
+});

@@ -6,7 +6,7 @@ test.describe('Date Selectors Tests', () => {
         const pm = new PageManager(page);
         await pm.navigateTo().homePage();
         await pm.navigateTo().ownersSearchPage();
-    })
+    });
 
     test("Select the desired date in the calendar widget", async ({ page }) => {
         const pm = new PageManager(page);

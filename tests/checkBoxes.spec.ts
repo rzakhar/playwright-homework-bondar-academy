@@ -10,31 +10,31 @@ test.describe('Checkboxes Tests', () => {
 
     test('Validate selected specialties', async ({ page }) => {
         const pm = new PageManager(page);
-        await pm.onVeterinarsPage().selectByNameAndGoToEditByPressingEditButton("Helen Leary");
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(["radiology"]);
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownItems({ "radiology": true, "surgery": false, "dentistry": false });
-        await pm.onVeterinarsPage().changeSpecialtySelection("surgery", true);
-        await pm.onVeterinarsPage().changeSpecialtySelection("radiology", false);
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(["surgery"]);
-        await pm.onVeterinarsPage().changeSpecialtySelection("dentistry", true);
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(["surgery", "dentistry"]);
+        await pm.onVeterinariansPage().selectByNameAndGoToEditByPressingEditButton("Helen Leary");
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownSummary(["radiology"]);
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownItems({ "radiology": true, "surgery": false, "dentistry": false });
+        await pm.onVeterinariansPage().changeSpecialtySelection("surgery", true);
+        await pm.onVeterinariansPage().changeSpecialtySelection("radiology", false);
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownSummary(["surgery"]);
+        await pm.onVeterinariansPage().changeSpecialtySelection("dentistry", true);
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownSummary(["surgery", "dentistry"]);
     });
 
     test('Select all specialties', async ({ page }) => {
         const pm = new PageManager(page);
-        await pm.onVeterinarsPage().selectByNameAndGoToEditByPressingEditButton("Rafael Ortega");
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(["surgery"]);
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownItems({ "surgery": true, "radiology": false, "dentistry": false });
-        await pm.onVeterinarsPage().modifyAllSpecialtiesCheckboxesToOneState(true);
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(["surgery", "radiology", "dentistry"]);
+        await pm.onVeterinariansPage().selectByNameAndGoToEditByPressingEditButton("Rafael Ortega");
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownSummary(["surgery"]);
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownItems({ "surgery": true, "radiology": false, "dentistry": false });
+        await pm.onVeterinariansPage().modifyAllSpecialtiesCheckboxesToOneState(true);
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownSummary(["surgery", "radiology", "dentistry"]);
     });
 
     test('Unselect all specialties', async ({ page }) => {
         const pm = new PageManager(page);
-        await pm.onVeterinarsPage().selectByNameAndGoToEditByPressingEditButton("Linda Douglas");
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(["dentistry", "surgery"]);
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownItems({ "surgery": true, "radiology": false, "dentistry": true });
-        await pm.onVeterinarsPage().modifyAllSpecialtiesCheckboxesToOneState(false);
-        await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary([]);
+        await pm.onVeterinariansPage().selectByNameAndGoToEditByPressingEditButton("Linda Douglas");
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownSummary(["dentistry", "surgery"]);
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownItems({ "surgery": true, "radiology": false, "dentistry": true });
+        await pm.onVeterinariansPage().modifyAllSpecialtiesCheckboxesToOneState(false);
+        await pm.onVeterinariansPage().verifySpecialtiesDropdownSummary([]);
     });
 });

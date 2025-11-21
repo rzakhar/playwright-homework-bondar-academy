@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { HelperBase } from './helperBase';
 
-export class VeterinarsPage extends HelperBase {
+export class VeterinariansPage extends HelperBase {
     /** Go to edit veterinarian page by selecting vet by name and pressing Edit button
      * @param vetName Veterinarian's full name
      */
