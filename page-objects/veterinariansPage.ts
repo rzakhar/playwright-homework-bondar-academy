@@ -21,7 +21,7 @@ export class VeterinariansPage extends HelperBase {
      * @param specialties Object with specialty names as keys and their selection state as boolean values
      */
     async verifySpecialtiesDropdownItems(specialties: { [key: string]: boolean }) {
-        await this.page.locator('span.selected-specialties').click();
+        await this.page.locator('div.dropdown').click();
 
         for (const [specialty, isSelected] of Object.entries(specialties)) {
             const checkbox = this.page.getByRole('checkbox', { name: specialty });
