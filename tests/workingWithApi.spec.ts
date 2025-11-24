@@ -56,7 +56,7 @@ test('intercept api response', async ({ page }) => {
     await page.route('*/**/api/vets', async route => {
         const response = await route.fetch();
         const responseBody = await response.json();
-        responseBody[responseBody.length - 1].specialties = tenSpecialties;
+        responseBody.find((vet: any) => vet.firstName === 'Sharon' && vet.lastName === 'Jenkins').specialties = tenSpecialties;
         await route.fulfill({
             body: JSON.stringify(responseBody),
         });
