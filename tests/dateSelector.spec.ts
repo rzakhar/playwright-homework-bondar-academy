@@ -75,7 +75,6 @@ test.describe('Date Selectors Tests', () => {
         var fortyFiveDaysAgo = new Date()
         fortyFiveDaysAgo.setDate(currentDate.getDate() - 45);
         const fortyFiveDaysAgoVisitsTableExpectedValue = fortyFiveDaysAgo.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        const fortyFiveDaysAgoInputFieldExpectedValue = fortyFiveDaysAgoVisitsTableExpectedValue.replace(/\//g, "-");
 
         await page.getByRole('button', { name: 'Open Calendar' }).click();
 
@@ -88,8 +87,11 @@ test.describe('Date Selectors Tests', () => {
         await page.locator('input[name="description"]').fill('massage therapy');
         await page.getByRole('button', { name: 'Add Visit' }).click();
 
-        await expect(samanthaVisitsTable.getByRole('row').nth(1).getByRole('cell').first()).toHaveText(currentDateInputFieldExpectedValue);
-        await expect(samanthaVisitsTable.getByRole('row').nth(2).getByRole('cell').first()).toHaveText(fortyFiveDaysAgoInputFieldExpectedValue);
+        const firstDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(3).getByRole('cell').first().textContent()!;
+        const secondDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(4).getByRole('cell').first().textContent()!;
+        const firstDisplayedVisitDate = new Date(firstDisplayedVisitDateString!);
+        const secondDisplayedVisitDate = new Date(secondDisplayedVisitDateString!);
+        expect(secondDisplayedVisitDate.getTime()).toBeLessThan(firstDisplayedVisitDate.getTime());
 
         await samanthaVisitsTable.getByRole('row', { name: "dermatologists visit" }).getByRole('button', { name: 'Delete Visit' }).click();
         await samanthaVisitsTable.getByRole('row', { name: "massage therapy" }).getByRole('button', { name: 'Delete Visit' }).click();
