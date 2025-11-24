@@ -2,14 +2,9 @@ import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
 
 test('Delete specialty validation', async ({ page, request }) => {
-    const token = process.env.ACCESS_TOKEN;
-
     const addSpecialtyResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/specialties', {
         data: {
             "name": "api testing expert"
-        },
-        headers: {
-            'Authorization': `Bearer ${token}`
         }
     });
     expect(addSpecialtyResponse.status()).toEqual(201);
@@ -22,17 +17,12 @@ test('Delete specialty validation', async ({ page, request }) => {
 });
 
 test('Add and delete veterinarian', async ({ page, request }) => {
-    const token = process.env.ACCESS_TOKEN;
-
     const addVetResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/vets', {
         data: {
             "firstName": "Robot",
             "lastName": "Tester",
             id: null,
             "specialties": []
-        },
-        headers: {
-            'Authorization': `Bearer ${token}`
         }
     });
     expect(addVetResponse.status()).toEqual(201);
@@ -51,18 +41,10 @@ test('Add and delete veterinarian', async ({ page, request }) => {
     await page.getByRole('button', { name: 'Save Vet' }).click();
     await expect(newVetRow.getByRole('cell').nth(1)).toHaveText('dentistry');
 
-    const deleteVetResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/vets/${newVetId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
+    const deleteVetResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/vets/${newVetId}`);
     expect(deleteVetResponse.status()).toEqual(204);
 
-    const vetsListResponse = await request.get('https://petclinic-api.bondaracademy.com/petclinic/api/vets', {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
+    const vetsListResponse = await request.get('https://petclinic-api.bondaracademy.com/petclinic/api/vets');
     expect(vetsListResponse.status()).toEqual(200);
     const vets = await vetsListResponse.json();
     const vetExists = vets.some((vet: { id: number; }) => vet.id === newVetId);
@@ -70,13 +52,9 @@ test('Add and delete veterinarian', async ({ page, request }) => {
 });
 
 test('New specialty is displayed', async ({ page, request }) => {
-    const token = process.env.ACCESS_TOKEN;
     const addSpecialtyResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/specialties', {
         data: {
             "name": "api testing ninja"
-        },
-        headers: {
-            'Authorization': `Bearer ${token}`
         }
     });
     expect(addSpecialtyResponse.status()).toEqual(201);
@@ -89,12 +67,8 @@ test('New specialty is displayed', async ({ page, request }) => {
             id: null,
             "specialties":
                 [{ id: 4330, name: "surgery" }]
-        },
-        headers: {
-            'Authorization': `Bearer ${token}`
         }
     });
-    console.log(await addVetResponse.text());
     expect(addVetResponse.status()).toEqual(201);
     const newVetId = (await addVetResponse.json()).id;
 
@@ -111,19 +85,11 @@ test('New specialty is displayed', async ({ page, request }) => {
     await page.locator('div.dropdown').click();
     await page.getByRole('button', { name: 'Save Vet' }).click();
     await expect(newVetRow.getByRole('cell').nth(1)).toHaveText('api testing ninja');
-   
-    const deleteVetResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/vets/${newVetId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
+
+    const deleteVetResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/vets/${newVetId}`);
     expect(deleteVetResponse.status()).toEqual(204);
 
-    const deleteSpecialtyResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/specialties/${newSpecialtyId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
+    const deleteSpecialtyResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/specialties/${newSpecialtyId}`);
     expect(deleteSpecialtyResponse.status()).toEqual(204);
 
     await pm.navigateTo().specialtiesPage();
