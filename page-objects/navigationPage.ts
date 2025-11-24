@@ -36,6 +36,17 @@ export class NavigationPage extends HelperBase {
     }
 
     /**
+     * Navigate to the New Owner page using the navigation menu
+     */
+    async newOwnerPage() {
+        await test.step('Navigate to New Owner page', async () => {
+            await this.page.getByRole('button', { name: 'Owners' }).click();
+            await this.page.getByRole('link', { name: 'Add New' }).click();
+            await expect(this.page.getByRole('heading', { name: 'New Owner' })).toBeVisible();
+        });
+    }
+
+    /**
      * Navigate to the Pet Types page using the navigation menu
      */
     async petTypesPage() {

@@ -31,7 +31,7 @@ test('mocking API request', async ({ page }) => {
         await expect(firstOwnerRow.getByRole('cell').nth(4)).toHaveText(' ' + owners[0].pets.map(p => p.name).join('  ') + ' ');
     });
     await test.step('Verify first owner details on owners information page', async () => {
-        await pm.onOwnersPage().goToOwnerPageByClickingOnOwnerName(expectedFirstOwnerFullName);
+        await pm.onOwnersPage().clickOnOwnerName(expectedFirstOwnerFullName);
         await expect(page.locator('b.ownerFullName')).toHaveText(expectedFirstOwnerFullName);
         const adressTextLocator = page.locator('tr', { hasText: 'Address' }).getByRole('cell').last();
         await expect(adressTextLocator).toHaveText(owners[0].address);
@@ -67,4 +67,24 @@ test('intercept api response', async ({ page }) => {
     await pm.navigateTo().veterinariansPage();
     const sharonVetRow = page.getByRole('row', { name: 'Sharon Jenkins' });
     await expect(sharonVetRow.getByRole('cell').nth(1)).toHaveText(' ' + tenSpecialties.map(s => s.name).join('  ') + ' ');
+});
+
+test('Add and delete an owner', async ({ page, request }) => {
+    const pm = new PageManager(page);
+    await pm.navigateTo().homePage();
+    await pm.navigateTo().newOwnerPage();
+    await pm.onAddNewOwnerPage().addNewOwner('TestFirstName', 'TestLastName', '123 Test St', 'TestCity', '1234567890');
+
+    const newOwnerResponse = await page.waitForResponse('*/**/api/owners');
+    const newOwnerResponseBody = await newOwnerResponse.json();
+    const newOwnerId = newOwnerResponseBody.id;
+
+    await pm.navigateTo().ownersSearchPage();
+    await pm.onOwnersPage().verifyOwnerInTable('TestFirstName TestLastName', '123 Test St', 'TestCity', '1234567890');
+
+    const deleteOwnerResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${newOwnerId}`, {
+    });
+    expect(deleteOwnerResponse.status()).toEqual(204);
+    await page.reload();
+    await pm.onOwnersPage().verifyOwnerIsNotInTable('TestFirstName TestLastName');
 });
