@@ -43,10 +43,10 @@ export class SpecialtiesPage extends HelperBase {
      * @returns Array of specialty names
      */
     async getAllSpecialties(): Promise<string[]> {
-        var allSpecialties = [];
+        let allSpecialties = [];
         const specialtyRows = this.page.getByRole('row').filter({ has: this.page.getByRole('textbox') });
         for (let specialtyRow of await specialtyRows.all()) {
-            const specialtyName = await specialtyRow.getByRole('cell').getByRole('textbox').inputValue()!;
+            const specialtyName = await specialtyRow.getByRole('cell').getByRole('textbox').inputValue();
             allSpecialties.push(specialtyName);
         };
         return allSpecialties;
