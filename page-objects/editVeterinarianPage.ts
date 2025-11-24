@@ -1,15 +1,7 @@
 import { expect } from '@playwright/test';
 import { HelperBase } from './helperBase';
 
-export class VeterinarsPage extends HelperBase {
-    /** Go to edit veterinarian page by selecting vet by name and pressing Edit button
-     * @param vetName Veterinarian's full name
-     */
-    async selectByNameAndGoToEditByPressingEditButton(vetName: string) {
-        await this.page.getByRole('row', { name: vetName }).getByRole('button', { name: 'Edit Vet' }).click();
-        await expect(this.page.getByRole('heading', { name: 'Edit Veterinarian' })).toBeVisible();
-    }
-
+export class EditVeterinarianPage extends HelperBase {
     /** Verify the summary text of selected specialties in the dropdown
      * @param specialties Array of selected specialty names
      */
@@ -51,7 +43,7 @@ export class VeterinarsPage extends HelperBase {
     /** Modify all specialties checkboxes to a given state
      * @param state Boolean indicating the desired state for all checkboxes
      */
-    async modifyAllSpecialtiesCheckboxesToOneState(state: boolean) {
+    async selectAllSpecialties(state: boolean) {
         const allCheckboxes = this.page.getByRole('checkbox');
         for (const checkbox of await allCheckboxes.all()) {
             if (state) {
@@ -70,7 +62,7 @@ export class VeterinarsPage extends HelperBase {
     async getAllSpecialtiesFromDropdown(): Promise<string[]> {
         await this.page.locator('div.dropdown').click();
         const allDropdownLabels = this.page.locator('div.dropdown-content label');
-        var specialtiesDropdownItems: string[] = [];
+        let specialtiesDropdownItems: string[] = [];
         for (let dropdownLabel of await allDropdownLabels.all()) {
             const specialtyText = await dropdownLabel.textContent();
             if (specialtyText) {

@@ -10,7 +10,7 @@ test.describe('Lists and dropdown Tests', () => {
 
     test('Validate selected pet types from the list', async ({ page }) => {
         const pm = new PageManager(page);
-        await pm.onOwnersPage().goToOwnerPageByClickingOnOwnerName("George Franklin");
+        await pm.onOwnersPage().clickOnOwnerName("George Franklin");
         await pm.onOwnerInformationPage().goToPetDetailsPageByClickingOnEditPetButton("Leo");
         await pm.onPetDetailsPage().verifyPetNameOwnerAndType("Leo", "George Franklin", "cat");
         await pm.onPetDetailsPage().selectEveryPetTypeAndVerifySelectionWithoutSaving();
@@ -18,7 +18,7 @@ test.describe('Lists and dropdown Tests', () => {
 
     test('Validate the pet type update', async ({ page }) => {
         const pm = new PageManager(page);
-        await pm.onOwnersPage().goToOwnerPageByClickingOnOwnerName("Eduardo Rodriquez");
+        await pm.onOwnersPage().clickOnOwnerName("Eduardo Rodriquez");
 
         await test.step(`Change Rosy pet type from dog to bird`, async () => {
             await pm.onOwnerInformationPage().goToPetDetailsPageByClickingOnEditPetButton("Rosy");
