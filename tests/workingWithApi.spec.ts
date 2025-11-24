@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
 import owners from '../test-data/owners.json';
 import tenSpecialties from '../test-data/tenSpecialties.json';
+import { RandomDataGenerator } from '../utils/randomDataGenerator';
 
 test('mocking API request', async ({ page }) => {
     await page.route('*/**/api/owners', async route => {
@@ -70,21 +71,28 @@ test('intercept api response', async ({ page }) => {
 });
 
 test('Add and delete an owner', async ({ page, request }) => {
+    const newOwnerFirstName = new RandomDataGenerator().getRandomFirstName()
+    const newOwnerLastName = new RandomDataGenerator().getRandomLastName()
+    const newOwnerFullName = `${newOwnerFirstName} ${newOwnerLastName}`
+    const newOwnerAddress = new RandomDataGenerator().getRandomAddress()
+    const newOwnerCity = new RandomDataGenerator().getRandomCity()
+    const newOwnerTelephone = new RandomDataGenerator().getRandomTelephone()
+
     const pm = new PageManager(page);
     await pm.navigateTo().homePage();
     await pm.navigateTo().newOwnerPage();
-    await pm.onAddNewOwnerPage().addNewOwner('TestFirstName', 'TestLastName', '123 Test St', 'TestCity', '1234567890');
+    await pm.onAddNewOwnerPage().addNewOwner(newOwnerFirstName, newOwnerLastName, newOwnerAddress, newOwnerCity, newOwnerTelephone);
 
     const newOwnerResponse = await page.waitForResponse('*/**/api/owners');
     const newOwnerResponseBody = await newOwnerResponse.json();
     const newOwnerId = newOwnerResponseBody.id;
 
     await pm.navigateTo().ownersSearchPage();
-    await pm.onOwnersPage().verifyOwnerInTable('TestFirstName TestLastName', '123 Test St', 'TestCity', '1234567890');
+    await pm.onOwnersPage().verifyOwnerInTable(newOwnerFullName, newOwnerAddress, newOwnerCity, newOwnerTelephone);
 
     const deleteOwnerResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${newOwnerId}`, {
     });
     expect(deleteOwnerResponse.status()).toEqual(204);
     await page.reload();
-    await pm.onOwnersPage().verifyOwnerIsNotInTable('TestFirstName TestLastName');
-
+    await pm.onOwnersPage().verifyOwnerIsNotInTable(newOwnerFullName);
+});

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
+import { RandomDataGenerator } from '../utils/randomDataGenerator';
 
 test('Delete specialty validation', async ({ page, request }) => {
     const addSpecialtyResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/specialties', {
@@ -17,10 +18,14 @@ test('Delete specialty validation', async ({ page, request }) => {
 });
 
 test('Add and delete veterinarian', async ({ page, request }) => {
+    const newVetFirstName = new RandomDataGenerator().getRandomFirstName()
+    const newVetLastName = new RandomDataGenerator().getRandomLastName()
+    const newVetFullName = `${newVetFirstName} ${newVetLastName}`
+
     const addVetResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/vets', {
         data: {
-            "firstName": "Robot",
-            "lastName": "Tester",
+            "firstName": newVetFirstName,
+            "lastName": newVetLastName,
             id: null,
             "specialties": []
         }
@@ -31,10 +36,10 @@ test('Add and delete veterinarian', async ({ page, request }) => {
     const pm = new PageManager(page);
     await pm.navigateTo().homePage();
     await pm.navigateTo().veterinariansPage();
-    const newVetRow = page.getByRole('row', { name: 'Robot Tester' });
+    const newVetRow = page.getByRole('row', { name: newVetFullName });
     await expect(newVetRow).toBeVisible();
     await expect(newVetRow.getByRole('cell').nth(1)).toBeEmpty();
-    await pm.onVeterinariansPage().clickEditButtonFor("Robot Tester");
+    await pm.onVeterinariansPage().clickEditButtonFor(newVetFullName);
     await pm.onEditVeterinarianPage().verifySpecialtiesDropdownItems({ "radiology": false, "surgery": false, "dentistry": false });
     await pm.onEditVeterinarianPage().changeSpecialtySelection("dentistry", true);
     await page.locator('div.dropdown').click();
@@ -52,6 +57,10 @@ test('Add and delete veterinarian', async ({ page, request }) => {
 });
 
 test('New specialty is displayed', async ({ page, request }) => {
+    const newVetFirstName = new RandomDataGenerator().getRandomFirstName()
+    const newVetLastName = new RandomDataGenerator().getRandomLastName()
+    const newVetFullName = `${newVetFirstName} ${newVetLastName}`
+
     const addSpecialtyResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/specialties', {
         data: {
             "name": "api testing ninja"
@@ -62,8 +71,8 @@ test('New specialty is displayed', async ({ page, request }) => {
 
     const addVetResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/vets', {
         data: {
-            "firstName": "Robot",
-            "lastName": "Tester",
+            "firstName": newVetFirstName,
+            "lastName": newVetLastName,
             id: null,
             "specialties":
                 [{ id: 4330, name: "surgery" }]
@@ -75,10 +84,10 @@ test('New specialty is displayed', async ({ page, request }) => {
     const pm = new PageManager(page);
     await pm.navigateTo().homePage();
     await pm.navigateTo().veterinariansPage();
-    const newVetRow = page.getByRole('row', { name: 'Robot Tester' });
+    const newVetRow = page.getByRole('row', { name: newVetFullName });
     await expect(newVetRow).toBeVisible();
     await expect(newVetRow.getByRole('cell').nth(1)).toHaveText('surgery');
-    await pm.onVeterinariansPage().clickEditButtonFor("Robot Tester");
+    await pm.onVeterinariansPage().clickEditButtonFor(newVetFullName);
     await pm.onEditVeterinarianPage().verifySpecialtiesDropdownItems({ "radiology": false, "surgery": true, "dentistry": false, "api testing ninja": false });
     await pm.onEditVeterinarianPage().changeSpecialtySelection("api testing ninja", true);
     await pm.onEditVeterinarianPage().changeSpecialtySelection("surgery", false);
