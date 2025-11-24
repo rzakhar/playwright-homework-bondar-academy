@@ -6,7 +6,7 @@ export class OwnersPage extends HelperBase {
      * Go to owner page by clicking on owner name
      * @param ownerName Owner's full name
      */
-    async goToOwnerPageByClickingOnOwnerName(ownerName: string) {
+    async clickOnOwnerName(ownerName: string) {
         await test.step(`Go to owner page by clicking on owner name: ${ownerName}`, async () => {
             await this.page.getByRole('link', { name: ownerName }).click();
             await expect(this.page.locator('b.ownerFullName')).toHaveText(ownerName);

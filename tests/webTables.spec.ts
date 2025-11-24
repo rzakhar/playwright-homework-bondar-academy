@@ -82,7 +82,7 @@ test('Validate specialty lists', async ({ page }) => {
     const allSpecialties = await pm.onSpecialtiesPage().getAllSpecialties();
 
     await pm.navigateTo().veterinariansPage();
-    await pm.onVeterinariansPage().selectByNameAndGoToEditByPressingEditButton("Sharon Jenkins");
+    await pm.onVeterinariansPage().clickEditButtonFor("Sharon Jenkins");
 
     const specialtiesDropdownItems = await pm.onVeterinariansPage().getAllSpecialtiesFromDropdown();
     expect(specialtiesDropdownItems).toEqual(allSpecialties);
