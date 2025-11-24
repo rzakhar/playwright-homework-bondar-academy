@@ -11,9 +11,11 @@ test.describe('Input Fields Tests', () => {
     test('Update pet type', async ({ page }) => {
         const pm = new PageManager(page);
         await pm.onPetTypesPage().goToEditPetTypeByPressingEditButton("cat");
-        await pm.onPetTypesPage().editPetNameAndVerifyChangeOnPage("rabbit");
+        await pm.onPetTypesPage().editPetNameAndClickUpdateButton("rabbit");
+        await expect(page.locator('[id="0"]')).toHaveValue("rabbit");
         await pm.onPetTypesPage().goToEditPetTypeByPressingEditButton("rabbit");
-        await pm.onPetTypesPage().editPetNameAndVerifyChangeOnPage("cat");
+        await pm.onPetTypesPage().editPetNameAndClickUpdateButton("cat");
+        await expect(page.locator('[id="0"]')).toHaveValue("cat");
     });
 
     test('Cancel pet type update', async ({ page }) => {

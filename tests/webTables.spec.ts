@@ -45,7 +45,7 @@ test.describe('Web Tables Tests for Owners Page', () => {
     test('Validate pets of the Madison city', async ({ page }) => {
         const madisonOwnerRows = page.getByRole('row', { name: 'Madison' });
         const expectedPets = [' Leo ', ' George ', ' Mulligan ', ' Freddy '];
-        var actualPets = [];
+        let actualPets = [];
         await expect(madisonOwnerRows).toHaveCount(expectedPets.length);
 
         for (let madisonOwnerRow of await madisonOwnerRows.all()) {
@@ -71,7 +71,7 @@ test('Validate specialty update', async ({ page }) => {
     });
     await pm.navigateTo().specialtiesPage();
     await pm.onSpecialtiesPage().renameSpecialtyAndVerifySpecialtiesTableUpdate('dermatology', 'surgery');
-})
+});
 
 test('Validate specialty lists', async ({ page }) => {
     const pm = new PageManager(page);
@@ -82,13 +82,13 @@ test('Validate specialty lists', async ({ page }) => {
     const allSpecialties = await pm.onSpecialtiesPage().getAllSpecialties();
 
     await pm.navigateTo().veterinariansPage();
-    await pm.onVeterinarsPage().selectByNameAndGoToEditByPressingEditButton("Sharon Jenkins");
+    await pm.onVeterinariansPage().clickEditButtonFor("Sharon Jenkins");
 
-    const specialtiesDropdownItems = await pm.onVeterinarsPage().getAllSpecialtiesFromDropdown();
+    const specialtiesDropdownItems = await pm.onEditVeterinarianPage().getAllSpecialtiesFromDropdown();
     expect(specialtiesDropdownItems).toEqual(allSpecialties);
 
-    await pm.onVeterinarsPage().changeSpecialtySelection('oncology', true);
-    await pm.onVeterinarsPage().verifySpecialtiesDropdownSummary(['oncology']);
+    await pm.onEditVeterinarianPage().changeSpecialtySelection('oncology', true);
+    await pm.onEditVeterinarianPage().verifySpecialtiesDropdownSummary(['oncology']);
     await page.locator('div.dropdown').click();
     await page.getByRole('button', { name: 'Save Vet' }).click();
     await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toHaveText('oncology');
@@ -97,4 +97,4 @@ test('Validate specialty lists', async ({ page }) => {
     await pm.onSpecialtiesPage().deleteSpecialtyAndVerifySpecialtiesTableUpdate('oncology');
     await pm.navigateTo().veterinariansPage();
     await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toBeEmpty();
-})
+});
