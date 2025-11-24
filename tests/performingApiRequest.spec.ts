@@ -34,9 +34,9 @@ test('Add and delete veterinarian', async ({ page, request }) => {
     const newVetRow = page.getByRole('row', { name: 'Robot Tester' });
     await expect(newVetRow).toBeVisible();
     await expect(newVetRow.getByRole('cell').nth(1)).toBeEmpty();
-    await pm.onVeterinariansPage().selectByNameAndGoToEditByPressingEditButton("Robot Tester");
-    await pm.onVeterinariansPage().verifySpecialtiesDropdownItems({ "radiology": false, "surgery": false, "dentistry": false });
-    await pm.onVeterinariansPage().changeSpecialtySelection("dentistry", true);
+    await pm.onVeterinariansPage().clickEditButtonFor("Robot Tester");
+    await pm.onEditVeterinarianPage().verifySpecialtiesDropdownItems({ "radiology": false, "surgery": false, "dentistry": false });
+    await pm.onEditVeterinarianPage().changeSpecialtySelection("dentistry", true);
     await page.locator('div.dropdown').click();
     await page.getByRole('button', { name: 'Save Vet' }).click();
     await expect(newVetRow.getByRole('cell').nth(1)).toHaveText('dentistry');
@@ -78,10 +78,10 @@ test('New specialty is displayed', async ({ page, request }) => {
     const newVetRow = page.getByRole('row', { name: 'Robot Tester' });
     await expect(newVetRow).toBeVisible();
     await expect(newVetRow.getByRole('cell').nth(1)).toHaveText('surgery');
-    await pm.onVeterinariansPage().selectByNameAndGoToEditByPressingEditButton("Robot Tester");
-    await pm.onVeterinariansPage().verifySpecialtiesDropdownItems({ "radiology": false, "surgery": true, "dentistry": false, "api testing ninja": false });
-    await pm.onVeterinariansPage().changeSpecialtySelection("api testing ninja", true);
-    await pm.onVeterinariansPage().changeSpecialtySelection("surgery", false);
+    await pm.onVeterinariansPage().clickEditButtonFor("Robot Tester");
+    await pm.onEditVeterinarianPage().verifySpecialtiesDropdownItems({ "radiology": false, "surgery": true, "dentistry": false, "api testing ninja": false });
+    await pm.onEditVeterinarianPage().changeSpecialtySelection("api testing ninja", true);
+    await pm.onEditVeterinarianPage().changeSpecialtySelection("surgery", false);
     await page.locator('div.dropdown').click();
     await page.getByRole('button', { name: 'Save Vet' }).click();
     await expect(newVetRow.getByRole('cell').nth(1)).toHaveText('api testing ninja');

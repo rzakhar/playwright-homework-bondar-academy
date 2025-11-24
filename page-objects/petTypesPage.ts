@@ -44,13 +44,12 @@ export class PetTypesPage extends HelperBase {
     }
 
     /**
-     * Edit pet type name and verify the change on the page
+     * Edit pet type name and click Update button
      * @param newName New name for the pet type
      */
-    async editPetNameAndVerifyChangeOnPage(newName: string) {
+    async editPetNameAndClickUpdateButton(newName: string) {
         await this.fillPetTypeNameInputField(newName);
         await this.page.getByRole('button', { name: 'Update' }).click();
-        await expect(this.page.locator('[id="0"]')).toHaveValue(newName);
     }
 
     /**

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
 
 test('Add and delete pet type', async ({ page }) => {
