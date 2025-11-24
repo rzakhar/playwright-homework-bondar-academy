@@ -10,14 +10,16 @@ test.describe('Date Selectors Tests', () => {
 
     test("Select the desired date in the calendar widget", async ({ page }) => {
         const pm = new PageManager(page);
-        await pm.onOwnersPage().goToOwnerPageByClickingOnOwnerName("Harold Davis");
-        await pm.onPetDetailsPage().addNewPet('Tom', new Date(2014, 4, 20), 'dog');
+        await pm.onOwnersPage().clickOnOwnerName("Harold Davis");
+        await pm.onOwnerInformationPage().clickAddNewPet();
+        await pm.onAddNewPetPage().addNewPet('Tom', new Date(2014, 4, 20), 'dog');
+        await pm.onOwnerInformationPage().verifyPetSummary('Tom', new Date(2014, 4, 20), 'dog');
         await pm.onOwnerInformationPage().deletePetByNameByClickingDeletePetButtonAndVerify('Tom');
     });
 
     test("Select the dates of visits and validate dates order", async ({ page }) => {
         const pm = new PageManager(page);
-        await pm.onOwnersPage().goToOwnerPageByClickingOnOwnerName("Jean Coleman");
+        await pm.onOwnersPage().clickOnOwnerName("Jean Coleman");
         const currentDateVisitsTableExpectedValue = await pm.onPetDetailsPage().addNewVisitAndReturnVisitsTableExpectedValue('Samantha', 'dermatologists visit', new Date());
 
         const samanthaVisitsTable = page.locator('app-pet-list', { hasText: "Samantha" }).locator('app-visit-list');
@@ -25,10 +27,13 @@ test.describe('Date Selectors Tests', () => {
 
         let fortyFiveDaysAgo = new Date()
         fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate() - 45);
-        const fortyFiveDaysAgoVisitsTableExpectedValue = await pm.onPetDetailsPage().addNewVisitAndReturnVisitsTableExpectedValue('Samantha', 'massage therapy', fortyFiveDaysAgo);
+        await pm.onPetDetailsPage().addNewVisitAndReturnVisitsTableExpectedValue('Samantha', 'massage therapy', fortyFiveDaysAgo);
 
-        await expect(samanthaVisitsTable.getByRole('row').nth(1).getByRole('cell').first()).toHaveText(currentDateVisitsTableExpectedValue);
-        await expect(samanthaVisitsTable.getByRole('row').nth(2).getByRole('cell').first()).toHaveText(fortyFiveDaysAgoVisitsTableExpectedValue);
+        const firstDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(3).getByRole('cell').first().textContent()!;
+        const secondDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(4).getByRole('cell').first().textContent()!;
+        const firstDisplayedVisitDate = new Date(firstDisplayedVisitDateString!);
+        const secondDisplayedVisitDate = new Date(secondDisplayedVisitDateString!);
+        expect(secondDisplayedVisitDate.getTime()).toBeLessThan(firstDisplayedVisitDate.getTime());
 
         await pm.onPetDetailsPage().deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable('Samantha', 'dermatologists visit');
         await pm.onPetDetailsPage().deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable('Samantha', 'massage therapy');

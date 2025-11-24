@@ -84,11 +84,11 @@ test('Validate specialty lists', async ({ page }) => {
     await pm.navigateTo().veterinariansPage();
     await pm.onVeterinariansPage().clickEditButtonFor("Sharon Jenkins");
 
-    const specialtiesDropdownItems = await pm.onVeterinariansPage().getAllSpecialtiesFromDropdown();
+    const specialtiesDropdownItems = await pm.onEditVeterinarianPage().getAllSpecialtiesFromDropdown();
     expect(specialtiesDropdownItems).toEqual(allSpecialties);
 
-    await pm.onVeterinariansPage().changeSpecialtySelection('oncology', true);
-    await pm.onVeterinariansPage().verifySpecialtiesDropdownSummary(['oncology']);
+    await pm.onEditVeterinarianPage().changeSpecialtySelection('oncology', true);
+    await pm.onEditVeterinarianPage().verifySpecialtiesDropdownSummary(['oncology']);
     await page.locator('div.dropdown').click();
     await page.getByRole('button', { name: 'Save Vet' }).click();
     await expect(page.getByRole('row', { name: 'Sharon Jenkins' }).getByRole('cell').nth(1)).toHaveText('oncology');

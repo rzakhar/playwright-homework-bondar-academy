@@ -11,6 +11,31 @@ export class OwnerInformationPage extends HelperBase {
         await expect(this.page.getByRole('heading', { name: "Pet" })).toBeVisible();
     }
 
+    /** 
+     * Click on Add New Pet button
+     */
+    async clickAddNewPet() {
+        await this.page.getByRole('button', { name: 'Add New Pet' }).click();
+    }
+
+    /**
+     * Verify pet's summary details on Owner Information page
+     * @param name Pet's full name
+     * @param petBirthDate Pet's birth date
+     * @param petType Pet's type
+     */
+    async verifyPetSummary(name: string, petBirthDate: Date, petType: string) {
+        const year = petBirthDate.getFullYear();
+        const month = String(petBirthDate.getMonth() + 1).padStart(2, '0');
+        const day = String(petBirthDate.getDate()).padStart(2, '0');
+
+        const tomPetSummarySection = this.page.locator('dl.dl-horizontal', { hasText: name });
+        const petSummaryRows = tomPetSummarySection.getByRole('definition');
+        await expect(petSummaryRows.first()).toHaveText(name);
+        await expect(petSummaryRows.nth(1)).toHaveText(`${year}-${month}-${day}`);
+        await expect(petSummaryRows.nth(2)).toHaveText(petType);
+    }
+
     /**
      * Delete a pet by clicking the Delete Pet button and verify the pet is removed
      * @param petName Pet's full name
