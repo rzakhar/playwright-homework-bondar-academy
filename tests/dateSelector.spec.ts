@@ -87,8 +87,8 @@ test.describe('Date Selectors Tests', () => {
         await page.locator('input[name="description"]').fill('massage therapy');
         await page.getByRole('button', { name: 'Add Visit' }).click();
 
-        const firstDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(3).getByRole('cell').first().textContent()!;
-        const secondDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(4).getByRole('cell').first().textContent()!;
+        const firstDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(1).getByRole('cell').first().textContent()!;
+        const secondDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(2).getByRole('cell').first().textContent()!;
         const firstDisplayedVisitDate = new Date(firstDisplayedVisitDateString!);
         const secondDisplayedVisitDate = new Date(secondDisplayedVisitDateString!);
         expect(secondDisplayedVisitDate.getTime()).toBeLessThan(firstDisplayedVisitDate.getTime());
