@@ -5,5 +5,5 @@ export class HelperBase {
 
     constructor(page: Page) {
         this.page = page;
-    }
+    };
 }

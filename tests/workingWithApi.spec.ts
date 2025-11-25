@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
 import owners from '../test-data/owners.json';
 import tenSpecialties from '../test-data/tenSpecialties.json';
+import { faker } from '@faker-js/faker';
 
 test('mocking API request', async ({ page }) => {
     await page.route('*/**/api/owners', async route => {
@@ -70,21 +71,28 @@ test('intercept api response', async ({ page }) => {
 });
 
 test('Add and delete an owner', async ({ page, request }) => {
+    const newOwnerFirstName = faker.person.firstName();
+    const newOwnerLastName = faker.person.lastName();
+    const newOwnerFullName = `${newOwnerFirstName} ${newOwnerLastName}`;
+    const newOwnerAddress = faker.location.streetAddress();
+    const newOwnerCity = faker.location.city();
+    const newOwnerTelephone = faker.string.numeric(10)
+
     const pm = new PageManager(page);
     await pm.navigateTo().homePage();
     await pm.navigateTo().newOwnerPage();
-    await pm.onAddNewOwnerPage().addNewOwner('TestFirstName', 'TestLastName', '123 Test St', 'TestCity', '1234567890');
+    await pm.onAddNewOwnerPage().addNewOwner(newOwnerFirstName, newOwnerLastName, newOwnerAddress, newOwnerCity, newOwnerTelephone);
 
     const newOwnerResponse = await page.waitForResponse('*/**/api/owners');
     const newOwnerResponseBody = await newOwnerResponse.json();
     const newOwnerId = newOwnerResponseBody.id;
 
     await pm.navigateTo().ownersSearchPage();
-    await pm.onOwnersPage().verifyOwnerInTable('TestFirstName TestLastName', '123 Test St', 'TestCity', '1234567890');
+    await pm.onOwnersPage().verifyOwnerInTable(newOwnerFullName, newOwnerAddress, newOwnerCity, newOwnerTelephone);
 
     const deleteOwnerResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${newOwnerId}`);
     expect(deleteOwnerResponse.status()).toEqual(204);
     await page.reload();
     await page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/owners');
-    await pm.onOwnersPage().verifyOwnerIsNotVisible('TestFirstName TestLastName');
+    await pm.onOwnersPage().verifyOwnerIsNotVisible(newOwnerFullName);
 });
