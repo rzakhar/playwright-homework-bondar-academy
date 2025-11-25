@@ -95,5 +95,5 @@ test('Add and delete an owner', async ({ page, request }) => {
     expect(deleteOwnerResponse.status()).toEqual(204);
     await page.reload();
     await pm.onOwnersPage().verifyOwnersTableRowsCount(10);
-    await pm.onOwnersPage().verifyOwnerIsNotInTable(newOwnerFullName);
+    await pm.onOwnersPage().verifyOwnerIsNotVisible(newOwnerFullName);
 });
