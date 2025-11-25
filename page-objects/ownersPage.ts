@@ -52,15 +52,6 @@ export class OwnersPage extends HelperBase {
     }
 
     /**
-     * Verify the number of rows in the owners table
-     * @param expectedCount Expected number of owners
-     */
-    async verifyOwnersTableRowsCount(expectedCount: number) {
-        const ownerFullNameCells = this.page.locator('td.ownerFullName');
-        await expect(ownerFullNameCells).toHaveCount(expectedCount);
-    }
-
-    /**
      * Verify that an owner is not visible in the owners table
      * @param ownerFullName Owner's full name
      */
