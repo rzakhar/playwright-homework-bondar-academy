@@ -8,7 +8,7 @@ export default defineConfig({
     workers: 1,
     reporter: 'html',
     globalSetup: '.auth/auth-setup.ts',
-    timeout: 90000,
+    timeout: 30000,
     use: {
         baseURL: 'https://petclinic.bondaracademy.com',
         trace: 'on-first-retry',
