@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
-import { RandomDataGenerator } from '../utils/randomDataGenerator';
+import { faker } from '@faker-js/faker';
 
 test('Delete specialty validation', async ({ page, request }) => {
     const addSpecialtyResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/specialties', {
@@ -18,9 +18,9 @@ test('Delete specialty validation', async ({ page, request }) => {
 });
 
 test('Add and delete veterinarian', async ({ page, request }) => {
-    const newVetFirstName = new RandomDataGenerator().getRandomFirstName()
-    const newVetLastName = new RandomDataGenerator().getRandomLastName()
-    const newVetFullName = `${newVetFirstName} ${newVetLastName}`
+    const newVetFirstName = faker.person.firstName();
+    const newVetLastName = faker.person.lastName();
+    const newVetFullName = `${newVetFirstName} ${newVetLastName}`;
 
     const addVetResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/vets', {
         data: {
@@ -57,9 +57,9 @@ test('Add and delete veterinarian', async ({ page, request }) => {
 });
 
 test('New specialty is displayed', async ({ page, request }) => {
-    const newVetFirstName = new RandomDataGenerator().getRandomFirstName()
-    const newVetLastName = new RandomDataGenerator().getRandomLastName()
-    const newVetFullName = `${newVetFirstName} ${newVetLastName}`
+    const newVetFirstName = faker.person.firstName();
+    const newVetLastName = faker.person.lastName();
+    const newVetFullName = `${newVetFirstName} ${newVetLastName}`;
 
     const addSpecialtyResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/specialties', {
         data: {

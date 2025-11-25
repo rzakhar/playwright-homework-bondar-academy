@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
 import owners from '../test-data/owners.json';
 import tenSpecialties from '../test-data/tenSpecialties.json';
-import { RandomDataGenerator } from '../utils/randomDataGenerator';
+import { faker } from '@faker-js/faker';
 
 test('mocking API request', async ({ page }) => {
     await page.route('*/**/api/owners', async route => {
@@ -71,12 +71,12 @@ test('intercept api response', async ({ page }) => {
 });
 
 test('Add and delete an owner', async ({ page, request }) => {
-    const newOwnerFirstName = new RandomDataGenerator().getRandomFirstName()
-    const newOwnerLastName = new RandomDataGenerator().getRandomLastName()
-    const newOwnerFullName = `${newOwnerFirstName} ${newOwnerLastName}`
-    const newOwnerAddress = new RandomDataGenerator().getRandomAddress()
-    const newOwnerCity = new RandomDataGenerator().getRandomCity()
-    const newOwnerTelephone = new RandomDataGenerator().getRandomTelephone()
+    const newOwnerFirstName = faker.person.firstName();
+    const newOwnerLastName = faker.person.lastName();
+    const newOwnerFullName = `${newOwnerFirstName} ${newOwnerLastName}`;
+    const newOwnerAddress = faker.location.streetAddress();
+    const newOwnerCity = faker.location.city();
+    const newOwnerTelephone = faker.phone.number().replace(/[^0-9]/g, '');
 
     const pm = new PageManager(page);
     await pm.navigateTo().homePage();

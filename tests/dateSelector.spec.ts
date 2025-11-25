@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { PageManager } from '../page-objects/pageManager';
-import { RandomDataGenerator } from '../utils/randomDataGenerator';
+import { faker } from '@faker-js/faker';
 
 test.describe('Date Selectors Tests', () => {
     test.beforeEach(async ({ page }) => {
@@ -13,15 +13,15 @@ test.describe('Date Selectors Tests', () => {
         const pm = new PageManager(page);
         await pm.onOwnersPage().clickOnOwnerName("Harold Davis");
         await pm.onOwnerInformationPage().clickAddNewPet();
-        const newPetName = new RandomDataGenerator().getRandomPetName();
+        const newPetName = faker.animal.petName();
         await pm.onAddNewPetPage().addNewPet(newPetName, new Date(2014, 4, 20), 'dog');
         await pm.onOwnerInformationPage().verifyPetSummary(newPetName, new Date(2014, 4, 20), 'dog');
         await pm.onOwnerInformationPage().deletePetByNameByClickingDeletePetButtonAndVerify(newPetName);
     });
 
     test("Select the dates of visits and validate dates order", async ({ page }) => {
-        const firstVisitDescription = new RandomDataGenerator().getRandomPetVisitDescription();
-        const secondVisitDescription = new RandomDataGenerator().getRandomPetVisitDescription();
+        const firstVisitDescription = faker.lorem.sentence({ min: 3, max: 5 });
+        const secondVisitDescription = faker.lorem.sentence({ min: 3, max: 5 });
 
         const pm = new PageManager(page);
         await pm.onOwnersPage().clickOnOwnerName("Jean Coleman");
@@ -34,8 +34,8 @@ test.describe('Date Selectors Tests', () => {
         fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate() - 45);
         await pm.onPetDetailsPage().addNewVisitAndReturnVisitsTableExpectedValue('Samantha', secondVisitDescription, fortyFiveDaysAgo);
 
-        const firstDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(3).getByRole('cell').first().textContent()!;
-        const secondDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(4).getByRole('cell').first().textContent()!;
+        const firstDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(1).getByRole('cell').first().textContent()!;
+        const secondDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(2).getByRole('cell').first().textContent()!;
         const firstDisplayedVisitDate = new Date(firstDisplayedVisitDateString!);
         const secondDisplayedVisitDate = new Date(secondDisplayedVisitDateString!);
         expect(secondDisplayedVisitDate.getTime()).toBeLessThan(firstDisplayedVisitDate.getTime());
