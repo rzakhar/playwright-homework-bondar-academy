@@ -1,0 +1,160 @@
+[
+    {
+        "firstName": "George",
+        "lastName": "Franklin",
+        "address": "110 W. Liberty St.",
+        "city": "Madison",
+        "telephone": "6085551023",
+        "id": 1955,
+        "pets": [
+            {
+                "name": "Xavier",
+                "birthDate": "2000-09-07",
+                "type": {
+                    "name": "cat",
+                    "id": 2462
+                },
+                "id": 3851,
+                "ownerId": 1956,
+                "visits": [
+                    {
+                        "date": "2001-01-01",
+                        "description": "yearly checkup",
+                        "id": 5295,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2002-01-01",
+                        "description": "yearly checkup",
+                        "id": 5296,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2003-01-01",
+                        "description": "yearly checkup",
+                        "id": 5297,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2004-01-01",
+                        "description": "yearly checkup",
+                        "id": 5298,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2005-01-01",
+                        "description": "yearly checkup",
+                        "id": 5299,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2006-01-01",
+                        "description": "yearly checkup",
+                        "id": 5300,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2007-01-01",
+                        "description": "yearly checkup",
+                        "id": 5301,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2008-01-01",
+                        "description": "yearly checkup",
+                        "id": 5302,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2009-01-01",
+                        "description": "yearly checkup",
+                        "id": 5303,
+                        "petId": 3851
+                    },
+                    {
+                        "date": "2010-01-01",
+                        "description": "yearly checkup",
+                        "id": 5304,
+                        "petId": 3851
+                    }
+                ]
+            },
+            {
+                "name": "Ylla",
+                "birthDate": "2000-09-07",
+                "type": {
+                    "name": "cat",
+                    "id": 2462
+                },
+                "id": 3852,
+                "ownerId": 1956,
+                "visits": []
+            }
+        ]
+    },
+    {
+        "firstName": "Betty",
+        "lastName": "Davis",
+        "address": "638 Cardinal Ave.",
+        "city": "Sun Prairie",
+        "telephone": "6085551749",
+        "id": 1956,
+        "pets": [
+            {
+                "name": "Alice",
+                "birthDate": "2000-09-07",
+                "type": {
+                    "name": "cat",
+                    "id": 2462
+                },
+                "id": 3846,
+                "ownerId": 1955,
+                "visits": []
+            },
+            {
+                "name": "Bob",
+                "birthDate": "2000-09-07",
+                "type": {
+                    "name": "cat",
+                    "id": 2462
+                },
+                "id": 3847,
+                "ownerId": 1955,
+                "visits": []
+            },
+            {
+                "name": "Charlie",
+                "birthDate": "2000-09-07",
+                "type": {
+                    "name": "cat",
+                    "id": 2462
+                },
+                "id": 3848,
+                "ownerId": 1955,
+                "visits": []
+            },
+            {
+                "name": "Daisy",
+                "birthDate": "2000-09-07",
+                "type": {
+                    "name": "cat",
+                    "id": 2462
+                },
+                "id": 3849,
+                "ownerId": 1955,
+                "visits": []
+            },
+            {
+                "name": "Eve",
+                "birthDate": "2000-09-07",
+                "type": {
+                    "name": "cat",
+                    "id": 2462
+                },
+                "id": 3850,
+                "ownerId": 1955,
+                "visits": []
+            }
+        ]
+    }
+]
