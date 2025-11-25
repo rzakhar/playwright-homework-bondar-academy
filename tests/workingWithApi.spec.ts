@@ -88,11 +88,12 @@ test('Add and delete an owner', async ({ page, request }) => {
     const newOwnerId = newOwnerResponseBody.id;
 
     await pm.navigateTo().ownersSearchPage();
+    await pm.onOwnersPage().verifyOwnersTableRowsCount(11);
     await pm.onOwnersPage().verifyOwnerInTable(newOwnerFullName, newOwnerAddress, newOwnerCity, newOwnerTelephone);
 
-    const deleteOwnerResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${newOwnerId}`, {
-    });
+    const deleteOwnerResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${newOwnerId}`);
     expect(deleteOwnerResponse.status()).toEqual(204);
     await page.reload();
+    await pm.onOwnersPage().verifyOwnersTableRowsCount(10);
     await pm.onOwnersPage().verifyOwnerIsNotInTable(newOwnerFullName);
 });
