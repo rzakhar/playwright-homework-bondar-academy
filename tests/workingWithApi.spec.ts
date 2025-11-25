@@ -76,7 +76,7 @@ test('Add and delete an owner', async ({ page, request }) => {
     const newOwnerFullName = `${newOwnerFirstName} ${newOwnerLastName}`;
     const newOwnerAddress = faker.location.streetAddress();
     const newOwnerCity = faker.location.city();
-    const newOwnerTelephone = faker.phone.number().replace(/[^0-9]/g, '');
+    const newOwnerTelephone = faker.string.numeric(10)
 
     const pm = new PageManager(page);
     await pm.navigateTo().homePage();
