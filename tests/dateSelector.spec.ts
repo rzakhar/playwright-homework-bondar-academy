@@ -29,8 +29,8 @@ test.describe('Date Selectors Tests', () => {
         fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate() - 45);
         await pm.onPetDetailsPage().addNewVisitAndReturnVisitsTableExpectedValue('Samantha', 'massage therapy', fortyFiveDaysAgo);
 
-        const firstDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(3).getByRole('cell').first().textContent()!;
-        const secondDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(4).getByRole('cell').first().textContent()!;
+        const firstDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(1).getByRole('cell').first().textContent()!;
+        const secondDisplayedVisitDateString = await samanthaVisitsTable.getByRole('row').nth(2).getByRole('cell').first().textContent()!;
         const firstDisplayedVisitDate = new Date(firstDisplayedVisitDateString!);
         const secondDisplayedVisitDate = new Date(secondDisplayedVisitDateString!);
         expect(secondDisplayedVisitDate.getTime()).toBeLessThan(firstDisplayedVisitDate.getTime());
