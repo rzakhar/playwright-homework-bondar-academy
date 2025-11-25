@@ -35,4 +35,27 @@ export class OwnersPage extends HelperBase {
             }
         });
     }
+
+    /**
+     * Verify owner details in the owners table
+     * @param ownerFullName Owner's full name
+     * @param address Owner's address
+     * @param city Owner's city
+     * @param telephone Owner's telephone
+     */
+    async verifyOwnerInTable(ownerFullName: string, address: string, city: string, telephone: string) {
+        const ownerRow = this.page.getByRole('row', { name: ownerFullName });
+        await expect(ownerRow.getByRole('cell').first()).toHaveText(ownerFullName);
+        await expect(ownerRow.getByRole('cell').nth(1)).toHaveText(address);
+        await expect(ownerRow.getByRole('cell').nth(2)).toHaveText(city);
+        await expect(ownerRow.getByRole('cell').nth(3)).toHaveText(telephone);
+    }
+
+    /**
+     * Verify that an owner is not visible in the owners table
+     * @param ownerFullName Owner's full name
+     */
+    async verifyOwnerIsNotVisible(ownerFullName: string) {
+        await expect(this.page.getByRole("row", { name: ownerFullName })).not.toBeVisible();
+    }
 }

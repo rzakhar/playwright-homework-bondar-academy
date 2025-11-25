@@ -5,9 +5,10 @@ import { OwnerInformationPage } from './ownerInformationPage';
 import { PetDetailsPage } from './petDetailsPage';
 import { VeterinariansPage } from './veterinariansPage';
 import { EditVeterinarianPage } from './editVeterinarianPage';
-import { AddNewPetPage } from './addNewPetPage'; 
+import { AddNewPetPage } from './addNewPetPage';
 import { PetTypesPage } from './petTypesPage';
 import { SpecialtiesPage } from './specialtiesPage';
+import { AddNewOwnerPage } from './addNewOwnerPage';
 
 export class PageManager {
     private readonly page: Page;
@@ -20,6 +21,7 @@ export class PageManager {
     private readonly addNewPetPage: AddNewPetPage;
     private readonly petTypesPage: PetTypesPage;
     private readonly specialtiesPage: SpecialtiesPage;
+    private readonly addNewOwnerPage: AddNewOwnerPage;
 
     constructor(page: Page) {
         this.page = page;
@@ -32,6 +34,7 @@ export class PageManager {
         this.addNewPetPage = new AddNewPetPage(this.page);
         this.petTypesPage = new PetTypesPage(this.page);
         this.specialtiesPage = new SpecialtiesPage(this.page);
+        this.addNewOwnerPage = new AddNewOwnerPage(this.page);
     }
 
     navigateTo() {
@@ -68,5 +71,9 @@ export class PageManager {
 
     onSpecialtiesPage() {
         return this.specialtiesPage;
+    }
+
+    onAddNewOwnerPage() {
+        return this.addNewOwnerPage;
     }
 }
