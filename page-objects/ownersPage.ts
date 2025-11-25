@@ -61,11 +61,10 @@ export class OwnersPage extends HelperBase {
     }
 
     /**
-     * Verify that an owner is not present in the owners table
+     * Verify that an owner is not visible in the owners table
      * @param ownerFullName Owner's full name
      */
-    async verifyOwnerIsNotInTable(ownerFullName: string) {
-        const ownerRow = this.page.getByRole('row', { name: ownerFullName });
-        await expect(ownerRow).toHaveCount(0);
+    async verifyOwnerIsNotVisible(ownerFullName: string) {
+        await expect(this.page.getByRole("row", { name: ownerFullName })).not.toBeVisible();
     }
 }
