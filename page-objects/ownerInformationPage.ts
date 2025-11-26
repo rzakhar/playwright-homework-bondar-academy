@@ -29,8 +29,8 @@ export class OwnerInformationPage extends HelperBase {
         const month = String(petBirthDate.getMonth() + 1).padStart(2, '0');
         const day = String(petBirthDate.getDate()).padStart(2, '0');
 
-        const tomPetSummarySection = this.page.locator('dl.dl-horizontal', { hasText: name });
-        const petSummaryRows = tomPetSummarySection.getByRole('definition');
+        const petSummarySection = this.page.locator('dl.dl-horizontal', { hasText: name });
+        const petSummaryRows = petSummarySection.getByRole('definition');
         await expect(petSummaryRows.first()).toHaveText(name);
         await expect(petSummaryRows.nth(1)).toHaveText(`${year}-${month}-${day}`);
         await expect(petSummaryRows.nth(2)).toHaveText(petType);
@@ -44,5 +44,16 @@ export class OwnerInformationPage extends HelperBase {
         const petSummarySection = this.page.locator('dl.dl-horizontal', { hasText: petName });
         await this.page.getByRole('button', { name: 'Delete Pet' }).click();
         await expect(petSummarySection).toBeHidden();
+    }
+
+    /**
+     * Delete a visit by its description and verify it's removed from visits table
+     * @param petName Pet's full name
+     * @param visitDescription Description of the visit to be deleted
+     */
+    async deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable(petName: string, visitDescription: string) {
+        const visitsTable = this.page.locator('app-pet-list', { hasText: petName }).locator('app-visit-list');
+        await visitsTable.getByRole('row', { name: visitDescription }).getByRole('button', { name: 'Delete Visit' }).click();
+        await expect(visitsTable.getByRole('row', { name: visitDescription })).toBeHidden();
     }
 }
