@@ -65,15 +65,4 @@ export class PetDetailsPage extends HelperBase {
 
         return dateVisitsTableExpectedValue
     }
-
-    /**
-     * Delete a visit by its description and verify it's removed from visits table
-     * @param petName Pet's full name
-     * @param visitDescription Description of the visit to be deleted
-     */
-    async deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable(petName: string, visitDescription: string) {
-        const visitsTable = this.page.locator('app-pet-list', { hasText: petName }).locator('app-visit-list');
-        await visitsTable.getByRole('row', { name: visitDescription }).getByRole('button', { name: 'Delete Visit' }).click();
-        await expect(visitsTable.getByRole('row', { name: visitDescription })).toBeHidden();
-    }
 }
