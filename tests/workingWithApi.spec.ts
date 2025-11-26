@@ -81,7 +81,8 @@ test('Add and delete an owner', async ({ page, request }) => {
     const pm = new PageManager(page);
     await pm.navigateTo().homePage();
     await pm.navigateTo().newOwnerPage();
-    await pm.onAddNewOwnerPage().addNewOwner(newOwnerFirstName, newOwnerLastName, newOwnerAddress, newOwnerCity, newOwnerTelephone);
+    await pm.onAddNewOwnerPage().fillNewOwnerDetails(newOwnerFirstName, newOwnerLastName, newOwnerAddress, newOwnerCity, newOwnerTelephone);
+    await pm.onAddNewOwnerPage().clickAddOwner();
 
     const newOwnerResponse = await page.waitForResponse('*/**/api/owners');
     const newOwnerResponseBody = await newOwnerResponse.json();
