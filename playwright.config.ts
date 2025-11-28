@@ -6,8 +6,7 @@ export default defineConfig({
     fullyParallel: false,
     retries: 2,
     reporter: [
-        // Use "dot" reporter on CI, "list" otherwise (Playwright default).
-        process.env.CI ? ["dot"] : ["list"],
+        ["list"],
         // Add Argos reporter.
         [
             "@argos-ci/playwright/reporter",
