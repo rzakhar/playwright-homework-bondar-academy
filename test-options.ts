@@ -31,7 +31,7 @@ export const test = base.extend<TestOptions>({
         const createOwnerResponseBody = await createOwnerResponse.json();
         const newOwnerId = createOwnerResponseBody.id;
 
-        await use(new OwnerData(newOwnerId, newOwnerFullName, newOwnerAddress, newOwnerCity, newOwnerTelephone));
+        await use({ id: newOwnerId, fullName: newOwnerFullName, address: newOwnerAddress, city: newOwnerCity, telephone: newOwnerTelephone });
 
         const deleteOwnerResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${newOwnerId}`);
         expect(deleteOwnerResponse.status()).toEqual(204);
@@ -53,7 +53,7 @@ export const test = base.extend<TestOptions>({
         const createPetResponseBody = await createPetResponse.json();
         const newPetId = createPetResponseBody.id;
 
-        await use(new PetData(newPetId, newPetName, new Date(newPetBirthDate), newPetType));
+        await use({ id: newPetId, name: newPetName, birthDate: new Date(newPetBirthDate), type: newPetType });
     },
 
     tempVisit: async ({ request, tempOwnerWithTeardown, tempPet }, use) => {
@@ -69,7 +69,7 @@ export const test = base.extend<TestOptions>({
         expect(createVisitResponse.status()).toBe(201);
         const createVisitResponseBody = await createVisitResponse.json();
 
-        await use(new VisitData(createVisitResponseBody.id, newVisitDescription, new Date(newVisitDate)));
+        await use({ id: createVisitResponseBody.id, description: newVisitDescription, date: new Date(newVisitDate) });
     },
 
     pageManager: async ({ page }, use) => {
@@ -77,29 +77,23 @@ export const test = base.extend<TestOptions>({
     }
 });
 
-class OwnerData {
-    constructor(
-        public id: string,
-        public fullName: string,
-        public address: string,
-        public city: string,
-        public telephone: string
-    ) { }
-};
+interface OwnerData {
+    id: string;
+    fullName: string;
+    address: string;
+    city: string;
+    telephone: string;
+}
 
-class PetData {
-    constructor(
-        public id: string,
-        public name: string,
-        public birthDate: Date,
-        public type: string
-    ) { }
-};
+interface PetData {
+    id: string;
+    name: string;
+    birthDate: Date;
+    type: string;
+}
 
-class VisitData {
-    constructor(
-        public id: string,
-        public description: string,
-        public date: Date
-    ) { }
-};
+interface VisitData {
+    id: string;
+    description: string;
+    date: Date;
+}
