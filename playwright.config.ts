@@ -5,12 +5,24 @@ require('dotenv').config();
 export default defineConfig({
     fullyParallel: false,
     retries: 2,
-    reporter: 'html',
+    reporter: [
+        // Use "dot" reporter on CI, "list" otherwise (Playwright default).
+        process.env.CI ? ["dot"] : ["list"],
+        // Add Argos reporter.
+        [
+            "@argos-ci/playwright/reporter",
+            {
+                // Upload to Argos on CI only.
+                uploadToArgos: !!process.env.CI,
+            },
+        ],
+    ],
     globalSetup: '.auth/auth-setup.ts',
     timeout: 50000,
     use: {
         baseURL: 'https://petclinic.bondaracademy.com',
         trace: 'on-first-retry',
+        screenshot: "only-on-failure",
         storageState: '.auth/user.json',
         extraHTTPHeaders: {
             'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`

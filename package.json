@@ -11,6 +11,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@argos-ci/playwright": "^6.3.3",
         "@faker-js/faker": "^10.1.0",
         "@playwright/test": "1.51.0",
         "@types/node": "^20.9.3",
