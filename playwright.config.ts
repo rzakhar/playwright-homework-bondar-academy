@@ -4,7 +4,7 @@ require('dotenv').config();
 
 export default defineConfig({
     fullyParallel: false,
-    retries: 2,
+    retries: process.env.CI ? 2 : 0,
     reporter: [
         ["list"],
         // Add Argos reporter.
