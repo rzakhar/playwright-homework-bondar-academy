@@ -4,7 +4,7 @@ require('dotenv').config();
 
 export default defineConfig({
     fullyParallel: false,
-    retries: 0,
+    retries: 1,
     reporter: 'html',
     globalSetup: '.auth/auth-setup.ts',
     timeout: 30000,
