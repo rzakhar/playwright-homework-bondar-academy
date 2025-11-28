@@ -11,7 +11,7 @@ import { SpecialtiesPage } from './specialtiesPage';
 import { AddNewOwnerPage } from './addNewOwnerPage';
 
 export class PageManager {
-    private readonly page: Page;
+    readonly page: Page;
     private readonly navigationPage: NavigationPage;
     private readonly ownersPage: OwnersPage;
     private readonly ownerInformationPage: OwnerInformationPage;

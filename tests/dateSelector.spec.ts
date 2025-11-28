@@ -40,7 +40,7 @@ test.describe('Date Selectors Tests', () => {
         const secondDisplayedVisitDate = new Date(secondDisplayedVisitDateString!);
         expect(secondDisplayedVisitDate.getTime()).toBeLessThan(firstDisplayedVisitDate.getTime());
 
-        await pm.onPetDetailsPage().deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable('Samantha', firstVisitDescription);
-        await pm.onPetDetailsPage().deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable('Samantha', secondVisitDescription);
+        await pm.onOwnerInformationPage().deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable('Samantha', firstVisitDescription);
+        await pm.onOwnerInformationPage().deleteVisitByDescriptionAndVerifyDeletionFromTheVisitsTable('Samantha', secondVisitDescription);
     });
 });
