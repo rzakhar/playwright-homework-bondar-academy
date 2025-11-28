@@ -16,6 +16,7 @@ export default defineConfig({
             },
         ],
     ],
+    workers: 1,
     globalSetup: '.auth/auth-setup.ts',
     timeout: 50000,
     use: {
