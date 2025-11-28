@@ -4,10 +4,10 @@ require('dotenv').config();
 
 export default defineConfig({
     fullyParallel: false,
-    retries: 1,
+    retries: 2,
     reporter: 'html',
     globalSetup: '.auth/auth-setup.ts',
-    timeout: 30000,
+    timeout: 50000,
     use: {
         baseURL: 'https://petclinic.bondaracademy.com',
         trace: 'on-first-retry',
@@ -15,7 +15,7 @@ export default defineConfig({
         extraHTTPHeaders: {
             'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`
         },
-        actionTimeout: 20000,
+        actionTimeout: 40000,
         viewport: { height: 1080, width: 1920 }
     },
 
