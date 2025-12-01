@@ -6,12 +6,10 @@ export default defineConfig({
     fullyParallel: false,
     retries: process.env.CI ? 2 : 0,
     reporter: [
-        ["list"],
-        // Add Argos reporter.
+        ["html"],
         [
             "@argos-ci/playwright/reporter",
             {
-                // Upload to Argos on CI only.
                 uploadToArgos: !!process.env.CI,
             },
         ],
