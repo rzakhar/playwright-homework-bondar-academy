@@ -3,6 +3,7 @@ import { PageManager } from '../page-objects/pageManager';
 import owners from '../test-data/owners.json';
 import tenSpecialties from '../test-data/tenSpecialties.json';
 import { faker } from '@faker-js/faker';
+import { argosScreenshot } from "@argos-ci/playwright";
 
 test('mocking API request', async ({ page }) => {
     await page.route('*/**/api/owners', async route => {
@@ -51,6 +52,7 @@ test('mocking API request', async ({ page }) => {
         const expectedVisitCountsForFirstPet = owners[0].pets[0].visits.length + 1; // +1 for the header row
         await expect(petListItems.first().getByRole('table').last().getByRole('row')).toHaveCount(expectedVisitCountsForFirstPet);
     });
+    await argosScreenshot(page, "mocking API request test");
 });
 
 test('intercept api response', async ({ page }) => {
